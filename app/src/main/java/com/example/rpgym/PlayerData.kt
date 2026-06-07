@@ -5,6 +5,11 @@ object PlayerData {
     var level = 1
     var xp = 0
 
+    var hp = 100
+    var maxHp = 100
+
+    var lastOnlineTime: Long = System.currentTimeMillis()
+
     var strengthLevel = 1
     var strengthXp = 0
 
@@ -55,5 +60,9 @@ object PlayerData {
             strengthXp -= 100
             strengthLevel++
         }
+    }
+
+    fun getStrength(): Int {
+        return strengthLevel * 5
     }
 }
