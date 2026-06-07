@@ -23,6 +23,9 @@ class StatsFragment : Fragment() {
         view.findViewById<TextView>(R.id.tvStatsStrength).text = "Siła: ${PlayerData.strengthLevel}"
         view.findViewById<TextView>(R.id.tvStatsTasks).text = "Zadania: ${PlayerData.completedTasks}"
         view.findViewById<TextView>(R.id.tvStatsMonsters).text = "Potwory: ${PlayerData.defeatedMonsters}"
+        view.findViewById<TextView>(R.id.tvStatsGold).text = "Złoto: ${PlayerData.gold}"
+        view.findViewById<TextView>(R.id.tvStatsHealthPotions).text = "Mikstury zdrowia: ${PlayerData.healthPotions}"
+        view.findViewById<TextView>(R.id.tvStatsStrengthPotions).text = "Mikstury siły: ${PlayerData.strengthPotions}"
 
         return view
     }
