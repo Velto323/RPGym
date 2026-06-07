@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_home -> { show(HomeFragment()); true }
                 R.id.nav_training -> { show(TrainingFragment()); true }
                 R.id.nav_dungeon -> { show(DungeonFragment()); true }
-                R.id.nav_stats -> { show(StatsFragment()); true }
+                R.id.nav_quests -> { show(QuestFragment()); true }
                 R.id.nav_player -> { show(PlayerFragment()); true }
                 else -> false
             }
