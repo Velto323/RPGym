@@ -1,16 +1,16 @@
-package com.example.rpgym.fragments
+package com.example.rpgym.quest
 
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import com.example.rpgym.PlayerData
 import com.example.rpgym.R
+import com.example.rpgym.data.PlayerData
 
 class QuestFragment : Fragment(R.layout.fragment_quest) {
 
-    private lateinit var tvBossQuest: TextView
-    private lateinit var tvMonsterQuest: TextView
+    private var tvBossQuest: TextView? = null
+    private var tvMonsterQuest: TextView? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -18,9 +18,7 @@ class QuestFragment : Fragment(R.layout.fragment_quest) {
         tvBossQuest = view.findViewById(R.id.tvBossQuest)
         tvMonsterQuest = view.findViewById(R.id.tvMonsterQuest)
 
-        PlayerData.addListener {
-            updateUI()
-        }
+        PlayerData.addListener { updateUI() }
 
         updateUI()
     }
@@ -32,10 +30,19 @@ class QuestFragment : Fragment(R.layout.fragment_quest) {
 
     private fun updateUI() {
 
-        tvMonsterQuest.text =
-            "Potwory: ${PlayerData.defeatedMonsters}"
-
-        tvBossQuest.text =
+        tvBossQuest?.text =
             "Bossy: ${PlayerData.bossQuestProgress}/${PlayerData.bossQuestTarget}"
+
+        tvMonsterQuest?.text =
+            "Potwory: ${PlayerData.defeatedMonsters}"
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        tvBossQuest = null
+        tvMonsterQuest = null
+
+        PlayerData.removeListener { updateUI() }
     }
 }

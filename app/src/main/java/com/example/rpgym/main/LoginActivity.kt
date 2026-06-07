@@ -1,4 +1,4 @@
-package com.example.rpgym
+package com.example.rpgym.main
 
 import android.content.Intent
 import android.os.Bundle

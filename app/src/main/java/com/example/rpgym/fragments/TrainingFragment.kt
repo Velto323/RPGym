@@ -8,7 +8,7 @@ import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import com.example.rpgym.PlayerData
+import com.example.rpgym.data.PlayerData
 import com.example.rpgym.R
 
 class TrainingFragment : Fragment() {

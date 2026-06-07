@@ -1,4 +1,4 @@
-package com.example.rpgym
+package com.example.rpgym.data
 
 object MonsterRepository {
 

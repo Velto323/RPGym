@@ -1,11 +1,16 @@
-package com.example.rpgym
+package com.example.rpgym.main
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.example.rpgym.R
 import com.example.rpgym.databinding.ActivityMainBinding
-import com.example.rpgym.fragments.*
+import com.example.rpgym.dung.DungeonFragment
+import com.example.rpgym.home.HomeFragment
+import com.example.rpgym.fragments.PlayerFragment
+import com.example.rpgym.quest.QuestFragment
+import com.example.rpgym.fragments.TrainingFragment
 import io.github.jan.supabase.auth.auth
 
 class MainActivity : AppCompatActivity() {
