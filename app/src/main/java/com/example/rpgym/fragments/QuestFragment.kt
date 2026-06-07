@@ -1,61 +1,41 @@
 package com.example.rpgym.fragments
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.rpgym.PlayerData
 import com.example.rpgym.R
 
-class QuestFragment : Fragment() {
+class QuestFragment : Fragment(R.layout.fragment_quest) {
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    private lateinit var tvBossQuest: TextView
+    private lateinit var tvMonsterQuest: TextView
 
-        val view = inflater.inflate(R.layout.fragment_quest, container, false)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        val tvMainQuest = view.findViewById<TextView>(R.id.tvMainQuest)
-        val tvDailyQuest = view.findViewById<TextView>(R.id.tvDailyQuest)
-        val tvBestiary = view.findViewById<TextView>(R.id.tvBestiary)
+        tvBossQuest = view.findViewById(R.id.tvBossQuest)
+        tvMonsterQuest = view.findViewById(R.id.tvMonsterQuest)
 
-        val bosses = listOf(
-            "Król Goblinów",
-            "Wilkołak",
-            "Kamienny Troll",
-            "Obłędny Rycerz",
-            "Królowa Pająków",
-            "Nekromanta",
-            "Wiedźma",
-            "Gryf",
-            "Wampir",
-            "Smok"
-        )
-
-        val progress = StringBuilder()
-
-        bosses.forEachIndexed { index, name ->
-
-            if (PlayerData.defeatedBosses.contains(index)) {
-                progress.append("✓ $name\n")
-            } else {
-                progress.append("□ $name\n")
-            }
+        PlayerData.addListener {
+            updateUI()
         }
 
-        tvMainQuest.text = progress.toString()
+        updateUI()
+    }
 
-        tvDailyQuest.text =
-            "Pokonaj 10 przeciwników\n\n" +
-                    "Postęp: ${PlayerData.defeatedMonsters}/10"
+    override fun onResume() {
+        super.onResume()
+        updateUI()
+    }
 
-        tvBestiary.text =
-            "Pokonani bossowie: ${PlayerData.defeatedBosses.size}/10"
+    private fun updateUI() {
 
-        return view
+        tvMonsterQuest.text =
+            "Potwory: ${PlayerData.defeatedMonsters}"
+
+        tvBossQuest.text =
+            "Bossy: ${PlayerData.bossQuestProgress}/${PlayerData.bossQuestTarget}"
     }
 }

@@ -43,7 +43,6 @@ class BattleFragment : Fragment() {
         return view
     }
 
-    // SPAWN POTWORA Z ZONE + ROUND
     private fun spawnMonster() {
         monster = MonsterRepository.getMonster(
             PlayerData.currentZone,
@@ -71,56 +70,47 @@ class BattleFragment : Fragment() {
         if (PlayerData.hp <= 0) {
             PlayerData.hp = PlayerData.maxHp
             localRound = 1
-            spawnMonster()
         }
     }
 
-    // KLUCZOWA FUNKCJA SYSTEMU
     private fun onMonsterKilled() {
 
-        val wasBoss = monster.isBoss
+        val killed = monster
+        val wasBoss = killed.isBoss
         val zone = PlayerData.currentZone
 
         PlayerData.defeatedMonsters++
 
         if (wasBoss) {
 
-            // EXP / LEVEL
             PlayerData.level++
             PlayerData.strengthLevel++
 
-            // QUEST + UNLOCK (TYLKO PIERWSZY RAZ)
-            if (!PlayerData.defeatedBosses.contains(zone)) {
+            PlayerData.addBossKill(zone)
 
-                PlayerData.defeatedBosses.add(zone)
+            android.app.AlertDialog.Builder(requireContext())
+                .setTitle("🎉 GRATULACJE!")
+                .setMessage("Pokonano bossa!\nOdblokowano nową lokację!")
+                .setPositiveButton("OK", null)
+                .show()
 
-                if (PlayerData.unlockedZone < DungeonRepository.zones.lastIndex) {
-                    PlayerData.unlockedZone++
-                }
-            }
-
-            // reset po bossie (ale w tym samym lochu)
             localRound = 1
 
         } else {
-
-            // normalny mob → następna runda
             localRound++
         }
 
         spawnMonster()
         updateUI()
+
+        PlayerData.notifyChange()
     }
 
     private fun updateUI() {
 
-        val isBoss = monster.isBoss
+        val bossTag = if (monster.isBoss) " 👑 BOSS" else ""
 
-        tvRound.text = if (isBoss)
-            "Runda: $localRound 👑 (BOSS)"
-        else
-            "Runda: $localRound"
-
+        tvRound.text = "Runda: $localRound$bossTag"
         tvMonster.text = monster.name
         tvHp.text = "HP: ${monster.hp}"
     }
