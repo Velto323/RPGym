@@ -1,67 +1,86 @@
 package com.example.rpgym.fragments
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.example.rpgym.PlayerData
-import com.example.rpgym.R
+import com.example.rpgym.*
 
 class DungeonFragment : Fragment() {
 
-    private var monsterHp = 100
-    private var round = 1
+    private var index = 0
+
+    private lateinit var tvName: TextView
+    private lateinit var tvDesc: TextView
+    private lateinit var btnEnter: Button
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
         val view = inflater.inflate(R.layout.fragment_dungeon, container, false)
 
-        val tvRound = view.findViewById<TextView>(R.id.tvRound)
-        val tvMonster = view.findViewById<TextView>(R.id.tvMonster)
-        val tvHp = view.findViewById<TextView>(R.id.tvHp)
-        val btnAttack = view.findViewById<Button>(R.id.btnAttack)
+        tvName = view.findViewById(R.id.tvZoneName)
+        tvDesc = view.findViewById(R.id.tvZoneDesc)
+        btnEnter = view.findViewById(R.id.btnEnterDungeon)
 
-        var currentMonsterName = "Goblin"
+        updateUI()
 
-        fun updateUI() {
-            tvRound.text = "Runda: $round"
-            tvMonster.text = currentMonsterName
-            tvHp.text = "HP: $monsterHp"
-        }
+        // SWIPE LEFT / RIGHT
+        view.setOnTouchListener(object : View.OnTouchListener {
 
-        fun spawnMonster() {
-            val isBoss = PlayerData.defeatedMonsters % 10 == 9 && PlayerData.defeatedMonsters != 0
-            monsterHp = if (isBoss) 300 else 100
-            currentMonsterName = if (isBoss) "🧨 Goblin (BOSS)" else "Goblin"
-            updateUI()
-        }
+            private var startX = 0f
 
-        btnAttack.setOnClickListener {
-            val damage = 10 + PlayerData.strengthLevel
-            monsterHp -= damage
+            override fun onTouch(v: View?, event: MotionEvent): Boolean {
 
-            if (monsterHp <= 0) {
-                PlayerData.defeatedMonsters++
-                val isBoss = PlayerData.defeatedMonsters % 10 == 0
-                val xpReward = if (isBoss) 150 else 50
-                PlayerData.addXp(xpReward)
-                round++
-                Toast.makeText(requireContext(), "Pokonałeś potwora! +$xpReward XP", Toast.LENGTH_SHORT).show()
-                spawnMonster()
-            } else {
-                updateUI()
+                when (event.action) {
+
+                    MotionEvent.ACTION_DOWN -> {
+                        startX = event.x
+                    }
+
+                    MotionEvent.ACTION_UP -> {
+                        val diff = event.x - startX
+
+                        if (diff > 120) {
+                            prevZone()
+                        } else if (diff < -120) {
+                            nextZone()
+                        }
+                    }
+                }
+
+                return true
             }
-        }
+        })
 
-        spawnMonster()
+        btnEnter.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainer, BattleFragment())
+                .addToBackStack(null)
+                .commit()
+        }
 
         return view
+    }
+
+    private fun nextZone() {
+        index = (index + 1) % DungeonRepository.zones.size
+        updateUI()
+    }
+
+    private fun prevZone() {
+        index = if (index - 1 < 0) DungeonRepository.zones.lastIndex else index - 1
+        updateUI()
+    }
+
+    private fun updateUI() {
+        val zone = DungeonRepository.zones[index]
+
+        tvName.text = zone.name
+        tvDesc.text = zone.description
     }
 }
