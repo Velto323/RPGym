@@ -11,7 +11,7 @@ import com.example.rpgym.*
 
 class BattleFragment : Fragment() {
 
-    private var round = 1
+    private var localRound = 1
     private lateinit var monster: Monster
 
     private lateinit var tvRound: TextView
@@ -32,7 +32,7 @@ class BattleFragment : Fragment() {
         tvHp = view.findViewById(R.id.tvHp)
         btnAttack = view.findViewById(R.id.btnAttack)
 
-        generateMonster()
+        spawnMonster()
 
         btnAttack.setOnClickListener {
             playerAttack()
@@ -43,8 +43,12 @@ class BattleFragment : Fragment() {
         return view
     }
 
-    private fun generateMonster() {
-        monster = MonsterRepository.getMonster(round)
+    // SPAWN POTWORA Z ZONE + ROUND
+    private fun spawnMonster() {
+        monster = MonsterRepository.getMonster(
+            PlayerData.currentZone,
+            localRound
+        )
     }
 
     private fun playerAttack() {
@@ -52,7 +56,7 @@ class BattleFragment : Fragment() {
         monster.hp -= PlayerData.getStrength()
 
         if (monster.hp <= 0) {
-            nextRound()
+            onMonsterKilled()
             return
         }
 
@@ -66,29 +70,57 @@ class BattleFragment : Fragment() {
 
         if (PlayerData.hp <= 0) {
             PlayerData.hp = PlayerData.maxHp
-            round = 1
+            localRound = 1
+            spawnMonster()
         }
     }
 
-    private fun nextRound() {
+    // KLUCZOWA FUNKCJA SYSTEMU
+    private fun onMonsterKilled() {
 
         val wasBoss = monster.isBoss
+        val zone = PlayerData.currentZone
 
-        round++
+        PlayerData.defeatedMonsters++
 
         if (wasBoss) {
-            MonsterRepository.onBossDefeated()
 
+            // EXP / LEVEL
             PlayerData.level++
             PlayerData.strengthLevel++
+
+            // QUEST + UNLOCK (TYLKO PIERWSZY RAZ)
+            if (!PlayerData.defeatedBosses.contains(zone)) {
+
+                PlayerData.defeatedBosses.add(zone)
+
+                if (PlayerData.unlockedZone < DungeonRepository.zones.lastIndex) {
+                    PlayerData.unlockedZone++
+                }
+            }
+
+            // reset po bossie (ale w tym samym lochu)
+            localRound = 1
+
+        } else {
+
+            // normalny mob → następna runda
+            localRound++
         }
 
-        generateMonster()
+        spawnMonster()
         updateUI()
     }
 
     private fun updateUI() {
-        tvRound.text = "Runda: $round"
+
+        val isBoss = monster.isBoss
+
+        tvRound.text = if (isBoss)
+            "Runda: $localRound 👑 (BOSS)"
+        else
+            "Runda: $localRound"
+
         tvMonster.text = monster.name
         tvHp.text = "HP: ${monster.hp}"
     }

@@ -1,55 +1,91 @@
-package com.example.rpgym
-
 object MonsterRepository {
 
-    private var globalBossBuff = 0
+    fun getMonster(zone: Int, round: Int): Monster {
 
-    fun getMonster(round: Int): Monster {
+        return when (zone) {
 
-        val bossIndex = (round - 1) / 5
-        val isBoss = round % 5 == 0
+            0 -> goblinZone(round)
+            1 -> wolfZone(round)
+            2 -> stoneZone(round)
+            3 -> knightZone(round)
+            4 -> spiderZone(round)
+            5 -> undeadZone(round)
+            6 -> witchZone(round)
+            7 -> gryphonZone(round)
+            8 -> vampireZone(round)
+            9 -> dragonZone(round)
 
-        val names = listOf(
-            "Król Goblinów" to "Goblin",
-            "Wilkołak" to "Wilk",
-            "Kamienny Troll" to "Magiczny Kamień",
-            "Obłędny Rycerz" to "Pijany Giermek",
-            "Królowa Pająków" to "Pająk",
-            "Nekromanta" to "Zombie",
-            "Wiedźma" to "Szkielet",
-            "Gryf" to "Harpia",
-            "Wampir" to "Nietoperz",
-            "Smok" to "Wiwerna"
-        )
-
-        val safeIndex = bossIndex.coerceAtMost(names.lastIndex)
-
-        val (bossName, mobName) = names[safeIndex]
-
-        val mobHp = 10 + bossIndex * 2
-        val mobAtk = 5 + bossIndex * 2
-
-        val bossHp = 100 + bossIndex * 20
-        val bossAtk = 10 + bossIndex * 5 + globalBossBuff
-
-        return if (isBoss) {
-            Monster(
-                name = "👑 $bossName",
-                hp = bossHp,
-                strength = bossAtk,
-                isBoss = true
-            )
-        } else {
-            Monster(
-                name = mobName,
-                hp = mobHp,
-                strength = mobAtk,
-                isBoss = false
-            )
+            else -> goblinZone(round)
         }
     }
 
-    fun onBossDefeated() {
-        globalBossBuff += 5
+    private fun goblinZone(round: Int): Monster {
+        return if (round == 5)
+            Monster("Król Goblinów", 100, 10, true)
+        else
+            Monster("Goblin", 10, 5, false)
+    }
+
+    private fun wolfZone(round: Int): Monster {
+        return if (round == 5)
+            Monster("Wilkołak", 120, 15, true)
+        else
+            Monster("Wilk", 12, 10, false)
+    }
+
+    private fun stoneZone(round: Int): Monster {
+        return if (round == 5)
+            Monster("Kamienny Troll", 140, 20, true)
+        else
+            Monster("Magiczny Kamień", 14, 15, false)
+    }
+
+    private fun knightZone(round: Int): Monster {
+        return if (round == 5)
+            Monster("Obłędny Rycerz", 160, 25, true)
+        else
+            Monster("Pijany Giermek", 16, 20, false)
+    }
+
+    private fun spiderZone(round: Int): Monster {
+        return if (round == 5)
+            Monster("Królowa Pająków", 180, 30, true)
+        else
+            Monster("Pająk", 18, 25, false)
+    }
+
+    private fun undeadZone(round: Int): Monster {
+        return if (round == 5)
+            Monster("Nekromanta", 200, 35, true)
+        else
+            Monster("Zombie", 20, 30, false)
+    }
+
+    private fun witchZone(round: Int): Monster {
+        return if (round == 5)
+            Monster("Wiedźma", 250, 40, true)
+        else
+            Monster("Szkielet", 25, 35, false)
+    }
+
+    private fun gryphonZone(round: Int): Monster {
+        return if (round == 5)
+            Monster("Gryf", 300, 45, true)
+        else
+            Monster("Harpia", 30, 40, false)
+    }
+
+    private fun vampireZone(round: Int): Monster {
+        return if (round == 5)
+            Monster("Wampir", 400, 50, true)
+        else
+            Monster("Nietoperz", 40, 45, false)
+    }
+
+    private fun dragonZone(round: Int): Monster {
+        return if (round == 5)
+            Monster("Smok", 500, 55, true)
+        else
+            Monster("Wiwerna", 50, 50, false)
     }
 }

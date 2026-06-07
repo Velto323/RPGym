@@ -17,53 +17,20 @@
         >
         
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="⚔️ Quest Główny"
-            android:textSize="24sp"
-            android:textStyle="bold"/>
+       <TextView
+    android:id="@+id/tvMainQuest"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"/>
 
-        <TextView
-            android:id="@+id/tvMainQuest"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Pokonaj Króla Goblinów"
-            android:textSize="18sp"/>
+<TextView
+    android:id="@+id/tvDailyQuest"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="📅 Questy Dzienne"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:layout_marginTop="24dp"/>
-
-        <TextView
-            android:id="@+id/tvDailyQuest1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="• Pokonaj 3 potwory"/>
-
-        <TextView
-            android:id="@+id/tvDailyQuest2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="• Wykonaj trening 3 razy"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="🖼 Mapa Potworów"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:layout_marginTop="24dp"/>
-
-        <TextView
-            android:id="@+id/tvMonsterMap"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=" Król Goblinów&#10;🔒 Wilkołak&#10;🔒 Kamienny Troll"/>
+<TextView
+    android:id="@+id/tvBestiary"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"/>
 
     </LinearLayout>
 

@@ -16,6 +16,12 @@ object PlayerData {
     var completedTasks = 0
     var defeatedMonsters = 0
 
+    var currentZone = 0
+    var unlockedZone = 0
+
+    // indeksy pokonanych bossów
+    val defeatedBosses = mutableSetOf<Int>()
+
     fun addXp(amount: Int) {
         xp += amount
         while (xp >= 100) {

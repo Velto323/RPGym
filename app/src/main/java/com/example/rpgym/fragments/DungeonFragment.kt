@@ -1,11 +1,16 @@
 package com.example.rpgym.fragments
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.MotionEvent
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import com.example.rpgym.*
+import com.example.rpgym.DungeonRepository
+import com.example.rpgym.PlayerData
+import com.example.rpgym.R
 
 class DungeonFragment : Fragment() {
 
@@ -29,7 +34,6 @@ class DungeonFragment : Fragment() {
 
         updateUI()
 
-        // SWIPE LEFT / RIGHT
         view.setOnTouchListener(object : View.OnTouchListener {
 
             private var startX = 0f
@@ -43,6 +47,7 @@ class DungeonFragment : Fragment() {
                     }
 
                     MotionEvent.ACTION_UP -> {
+
                         val diff = event.x - startX
 
                         if (diff > 120) {
@@ -58,6 +63,13 @@ class DungeonFragment : Fragment() {
         })
 
         btnEnter.setOnClickListener {
+
+            if (index > PlayerData.unlockedZone) {
+                return@setOnClickListener
+            }
+
+            PlayerData.currentZone = index
+
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainer, BattleFragment())
                 .addToBackStack(null)
@@ -73,14 +85,31 @@ class DungeonFragment : Fragment() {
     }
 
     private fun prevZone() {
-        index = if (index - 1 < 0) DungeonRepository.zones.lastIndex else index - 1
+        index = if (index - 1 < 0)
+            DungeonRepository.zones.lastIndex
+        else
+            index - 1
+
         updateUI()
     }
 
     private fun updateUI() {
+
         val zone = DungeonRepository.zones[index]
 
         tvName.text = zone.name
-        tvDesc.text = zone.description
+        tvDesc.text =
+            "${zone.description}\n\nOdblokowano: ${index <= PlayerData.unlockedZone}"
+
+        if (index <= PlayerData.unlockedZone) {
+
+            btnEnter.isEnabled = true
+            btnEnter.text = "⚔ Wejdź do lochu"
+
+        } else {
+
+            btnEnter.isEnabled = false
+            btnEnter.text = "🔒 Zablokowane"
+        }
     }
 }
