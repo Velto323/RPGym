@@ -9,7 +9,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.example.rpgym.PlayerData
+import com.example.rpgym.data.PlayerData
 import com.example.rpgym.R
 
 class ShopFragment : Fragment() {

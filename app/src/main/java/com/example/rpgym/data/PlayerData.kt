@@ -44,7 +44,6 @@ object PlayerData {
         return true
     }
 
-    fun getStrength(): Int = strengthLevel * 5
     fun getStrength(): Int {
 
         var damage = strengthLevel * 5
