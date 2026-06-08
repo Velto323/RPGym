@@ -9,10 +9,10 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.example.rpgym.LoginActivity
-import com.example.rpgym.PlayerData
+import com.example.rpgym.main.LoginActivity
+import com.example.rpgym.data.PlayerData
 import com.example.rpgym.R
-import com.example.rpgym.SupabaseClient
+import com.example.rpgym.main.SupabaseClient
 import io.github.jan.supabase.auth.auth
 import kotlinx.coroutines.launch
 
