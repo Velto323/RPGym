@@ -1,129 +1,125 @@
 package com.example.rpgym.dung
 
 import android.app.AlertDialog
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
+import android.widget.*
 import androidx.fragment.app.Fragment
 import com.example.rpgym.R
-import com.example.rpgym.data.Monster
-import com.example.rpgym.data.MonsterRepository
-import com.example.rpgym.data.PlayerData
+import com.example.rpgym.data.*
+import com.example.rpgym.quest.QuestManager
 
 class BattleFragment : Fragment() {
 
     private lateinit var monster: Monster
 
-    private lateinit var tvRound: TextView
-    private lateinit var tvMonster: TextView
-    private lateinit var tvHp: TextView
+    private lateinit var tvMonsterHp: TextView
+    private lateinit var tvZone: TextView
+    private lateinit var tvWave: TextView
+
+    private var zoneIndex = 0
+
+    companion object {
+        fun newInstance(zone: Int): BattleFragment {
+            val f = BattleFragment()
+            val b = android.os.Bundle()
+            b.putInt("zone", zone)
+            f.arguments = b
+            return f
+        }
+    }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+        inflater: android.view.LayoutInflater,
+        container: android.view.ViewGroup?,
+        savedInstanceState: android.os.Bundle?
+    ): android.view.View {
 
         val view = inflater.inflate(R.layout.fragment_battle, container, false)
 
-        tvRound = view.findViewById(R.id.tvRound)
-        tvMonster = view.findViewById(R.id.tvMonster)
-        tvHp = view.findViewById(R.id.tvHp)
+        tvMonsterHp = view.findViewById(R.id.tvMonsterHp)
+        tvZone = view.findViewById(R.id.tvZone)
+        tvWave = view.findViewById(R.id.tvWave)
 
-        spawnMonster()
+        zoneIndex = arguments?.getInt("zone") ?: 0
+
+        spawn()
         updateUI()
 
         view.findViewById<Button>(R.id.btnAttack).setOnClickListener {
-            playerAttack()
+            attack()
         }
 
         return view
     }
 
-    private fun spawnMonster() {
-        monster = MonsterRepository.getMonster(
-            PlayerData.currentZone,
-            PlayerData.dungeonWave
+    private fun spawn() {
+
+        val zone = DungeonRepository.zones[zoneIndex]
+        val isBoss = PlayerData.dungeonWave % 5 == 0
+
+        monster = Monster(
+            name = if (isBoss) zone.bossName else zone.mobName,
+            hp = if (isBoss) zone.bossHp else zone.mobHp,
+            strength = if (isBoss) zone.bossAttack else zone.mobAttack,
+            isBoss = isBoss
         )
     }
 
-    private fun playerAttack() {
+    private fun attack() {
 
+        // gracz bije
         monster.hp -= PlayerData.getStrength()
 
         if (monster.hp <= 0) {
-            onKill()
-            return
-        }
 
-        monsterAttack()
-        updateUI()
-    }
+            QuestManager.onMonsterKilled()
 
-    private fun monsterAttack() {
+            if (monster.isBoss) {
 
-        PlayerData.hp -= monster.strength
-
-        if (PlayerData.hp <= 0) {
-            onDeath()
-        }
-    }
-
-    private fun onDeath() {
-
-        PlayerData.dungeonWave = 1
-
-        spawnMonster()
-        updateUI()
-
-        AlertDialog.Builder(requireContext())
-            .setTitle("💀 Zginąłeś")
-            .setMessage("Wracasz do pierwszej fali lochu.")
-            .setPositiveButton("OK", null)
-            .show()
-
-        PlayerData.notifyChange()
-    }
-
-    private fun onKill() {
-
-        val zone = PlayerData.currentZone
-
-        PlayerData.defeatedMonsters++
-
-        if (monster.isBoss) {
-
-            val firstKill = PlayerData.addBossKill(zone)
-
-            if (firstKill) {
+                val firstTime = PlayerData.addBossKill(zoneIndex)
+                QuestManager.onBossKilled(zoneIndex)
 
                 AlertDialog.Builder(requireContext())
-                    .setTitle("🎉 Boss pokonany")
-                    .setMessage("Odblokowano nową lokację!")
+                    .setTitle("👑 BOSS POKONANY!")
+                    .setMessage(
+                        if (firstTime)
+                            "Gratulacje! Odblokowano nową lokację!"
+                        else
+                            "Pokonałeś bossa ponownie!"
+                    )
                     .setPositiveButton("OK", null)
                     .show()
             }
 
-            PlayerData.dungeonWave = 1
-
-        } else {
-
             PlayerData.dungeonWave++
+            spawn()
         }
 
-        spawnMonster()
-        updateUI()
+        // mob bije
+        PlayerData.hp -= monster.strength
 
-        PlayerData.notifyChange()
+        if (PlayerData.hp <= 0) {
+
+            PlayerData.hp = 1
+            PlayerData.dungeonWave = 1
+
+            AlertDialog.Builder(requireContext())
+                .setTitle("💀 ŚMIERĆ")
+                .setMessage("Wracasz do początku lochu")
+                .setPositiveButton("OK", null)
+                .show()
+
+            spawn()
+        }
+
+        updateUI()
     }
 
     private fun updateUI() {
 
-        tvRound.text = "Fala: ${PlayerData.dungeonWave}"
-        tvMonster.text = monster.name
-        tvHp.text = "HP: ${monster.hp}"
+        val zone = DungeonRepository.zones[zoneIndex]
+
+        tvMonsterHp.text = "HP: ${monster.hp}"
+        tvZone.text = zone.name
+        tvWave.text = "Fala: ${PlayerData.dungeonWave}"
     }
 }

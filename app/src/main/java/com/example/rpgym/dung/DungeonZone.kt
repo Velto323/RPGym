@@ -1,4 +1,4 @@
-package com.example.rpgym
+package com.example.rpgym.dung
 
 data class DungeonZone(
     val name: String,

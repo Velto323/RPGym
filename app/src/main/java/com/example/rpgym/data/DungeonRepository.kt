@@ -1,6 +1,6 @@
 package com.example.rpgym.data
 
-import com.example.rpgym.DungeonZone
+import com.example.rpgym.dung.DungeonZone
 
 object DungeonRepository {
 

@@ -1,10 +1,7 @@
 package com.example.rpgym.dung
 
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.view.*
-import android.widget.TextView
+import android.os.*
+import android.widget.*
 import androidx.fragment.app.Fragment
 import com.example.rpgym.R
 import com.example.rpgym.data.PlayerData
@@ -12,15 +9,16 @@ import com.example.rpgym.data.PlayerData
 class MeditationFragment : Fragment() {
 
     private val handler = Handler(Looper.getMainLooper())
+    private var running = true
 
     private lateinit var tvHp: TextView
     private lateinit var tvTimer: TextView
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+        inflater: android.view.LayoutInflater,
+        container: android.view.ViewGroup?,
+        savedInstanceState: android.os.Bundle?
+    ): android.view.View {
 
         val view = inflater.inflate(R.layout.fragment_meditation, container, false)
 
@@ -28,34 +26,36 @@ class MeditationFragment : Fragment() {
         tvTimer = view.findViewById(R.id.tvTimer)
 
         PlayerData.startMeditation()
-        startLoop()
+        loop()
 
         return view
     }
 
-    private fun startLoop() {
+    private fun loop() {
 
         handler.post(object : Runnable {
             override fun run() {
 
+                if (!running) return
+
                 PlayerData.tickMeditation()
 
-                updateUI()
+                tvHp.text = "HP: ${PlayerData.hp} / ${PlayerData.maxHp}"
+
+                val t = PlayerData.getTimeToFullHp()
+
+                tvTimer.text =
+                    if (t <= 0) "FULL HP ✔"
+                    else "Do pełnego HP: ${t}s"
 
                 handler.postDelayed(this, 1000)
             }
         })
     }
 
-    private fun updateUI() {
-
-        tvHp.text = "HP: ${PlayerData.hp} / ${PlayerData.maxHp}"
-
-        val time = PlayerData.getTimeToFullHp()
-
-        tvTimer.text = if (time > 0)
-            "Do pełnego HP: ${time}s"
-        else
-            "HP pełne ✔"
+    override fun onDestroyView() {
+        super.onDestroyView()
+        running = false
+        handler.removeCallbacksAndMessages(null)
     }
 }

@@ -1,48 +1,41 @@
 package com.example.rpgym.quest
 
 import android.os.Bundle
-import android.view.View
+import android.view.*
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.rpgym.R
-import com.example.rpgym.data.PlayerData
 
-class QuestFragment : Fragment(R.layout.fragment_quest) {
+class QuestFragment : Fragment() {
 
-    private var tvBossQuest: TextView? = null
-    private var tvMonsterQuest: TextView? = null
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+        val view = inflater.inflate(R.layout.fragment_quest, container, false)
 
-        tvBossQuest = view.findViewById(R.id.tvBossQuest)
-        tvMonsterQuest = view.findViewById(R.id.tvMonsterQuest)
+        val layout = view.findViewById<LinearLayout>(R.id.questContainer)
 
-        PlayerData.addListener { updateUI() }
+        layout.removeAllViews()
 
-        updateUI()
-    }
+        QuestManager.quests.forEach { quest ->
 
-    override fun onResume() {
-        super.onResume()
-        updateUI()
-    }
+            val tv = TextView(requireContext())
 
-    private fun updateUI() {
+            tv.text =
+                "${quest.title}\n" +
+                        "${quest.progress}/${quest.target} - " +
+                        if (quest.completed) "✔ DONE" else "IN PROGRESS"
 
-        tvBossQuest?.text =
-            "Bossy: ${PlayerData.bossQuestProgress}/${PlayerData.bossQuestTarget}"
+            tv.textSize = 16f
+            tv.setPadding(20, 20, 20, 20)
 
-        tvMonsterQuest?.text =
-            "Potwory: ${PlayerData.defeatedMonsters}"
-    }
+            layout.addView(tv)
+        }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-
-        tvBossQuest = null
-        tvMonsterQuest = null
-
-        PlayerData.removeListener { updateUI() }
+        return view
     }
 }

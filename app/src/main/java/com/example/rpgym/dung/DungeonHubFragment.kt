@@ -1,108 +1,106 @@
 package com.example.rpgym.dung
 
-import android.os.Bundle
 import android.view.*
-import android.widget.Button
-import android.widget.TextView
+import android.widget.*
 import androidx.fragment.app.Fragment
 import com.example.rpgym.R
-import com.example.rpgym.data.DungeonRepository
-import com.example.rpgym.data.PlayerData
+import com.example.rpgym.data.*
 
 class DungeonHubFragment : Fragment() {
 
     private lateinit var root: View
-    private lateinit var tvZone: TextView
+    private lateinit var tvName: TextView
     private lateinit var tvDesc: TextView
-    private lateinit var btnEnter: Button
-    private lateinit var btnMeditation: Button
 
+    private var index = 0f
     private var startX = 0f
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: android.os.Bundle?
     ): View {
 
-        root = inflater.inflate(R.layout.fragment_dungeon_hub, container, false)
+        val view = inflater.inflate(R.layout.fragment_dungeon_hub, container, false)
 
-        tvZone = root.findViewById(R.id.tvZone)
-        tvDesc = root.findViewById(R.id.tvZoneDesc)
-        btnEnter = root.findViewById(R.id.btnEnter)
-        btnMeditation = root.findViewById(R.id.btnMeditation)
+        root = view
+        tvName = view.findViewById(R.id.tvZoneName)
+        tvDesc = view.findViewById(R.id.tvZoneDesc)
 
-        btnEnter.setOnClickListener {
+        view.findViewById<Button>(R.id.btnEnterDungeon).setOnClickListener {
+
+            PlayerData.currentZone = index.toInt()
+            PlayerData.dungeonWave = 1
+
             parentFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainer, BattleFragment())
+                .replace(R.id.fragmentContainer, BattleFragment.newInstance(index.toInt()))
                 .addToBackStack(null)
                 .commit()
         }
 
-        btnMeditation.setOnClickListener {
+        view.findViewById<Button>(R.id.btnMeditation).setOnClickListener {
+
+            PlayerData.startMeditation()
+
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainer, MeditationFragment())
                 .addToBackStack(null)
                 .commit()
         }
 
-        setupSwipe()
+        setupSwipe(view)
         updateUI()
 
-        return root
+        return view
     }
 
-    // =========================
-    // SWIPE (PEWNY ROOT TOUCH)
-    // =========================
-    private fun setupSwipe() {
+    private fun setupSwipe(view: View) {
 
-        root.setOnTouchListener { _, event ->
+        view.isClickable = true
+        view.isFocusable = true
+
+        view.setOnTouchListener { _, event ->
 
             when (event.action) {
 
                 MotionEvent.ACTION_DOWN -> {
                     startX = event.x
+                    true
                 }
 
                 MotionEvent.ACTION_UP -> {
 
                     val diff = event.x - startX
 
-                    if (diff > 80) prevZone()
-                    if (diff < -80) nextZone()
+                    if (diff > 120) prev()
+                    else if (diff < -120) next()
 
                     updateUI()
+                    true
                 }
+
+                else -> false
             }
-
-            true
         }
     }
 
-    // =========================
-    // ZONE LOGIC
-    // =========================
-    private fun nextZone() {
-        if (PlayerData.currentZone < PlayerData.unlockedZone) {
-            PlayerData.currentZone++
-        }
+    private fun next() {
+
+        if (index < PlayerData.unlockedZone.toFloat()) index++
+        else index = 0f
     }
 
-    private fun prevZone() {
-        if (PlayerData.currentZone > 0) {
-            PlayerData.currentZone--
-        }
+    private fun prev() {
+
+        if (index > 0f) index--
+        else index = PlayerData.unlockedZone.toFloat()
     }
 
-    // =========================
-    // UI FROM REPOSITORY
-    // =========================
     private fun updateUI() {
 
-        val zone = DungeonRepository.zones[PlayerData.currentZone]
+        val zone = DungeonRepository.zones[index.toInt()]
 
-        tvZone.text = zone.name
+        tvName.text = zone.name
         tvDesc.text = zone.description
     }
 }

@@ -1,34 +1,40 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/dungeonRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center">
+    android:gravity="center"
+    android:padding="20dp">
 
     <TextView
-        android:id="@+id/tvZone"
+        android:id="@+id/tvZoneName"
+        android:textSize="26sp"
+        android:textStyle="bold"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Zone"
-        android:textSize="24sp"/>
+        android:layout_height="wrap_content"/>
 
     <TextView
         android:id="@+id/tvZoneDesc"
+        android:textSize="16sp"
+        android:layout_marginTop="10dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Description"
-        android:textSize="18sp"/>
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:text="← swipe →"
+        android:layout_marginTop="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
     <Button
-        android:id="@+id/btnEnter"
+        android:id="@+id/btnEnterDungeon"
+        android:text="WEJDŹ DO LOCHU"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Wejdź do lochu"/>
+        android:layout_height="wrap_content"/>
 
     <Button
         android:id="@+id/btnMeditation"
+        android:text="MEDYTACJA"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Medytacja"/>
+        android:layout_height="wrap_content"/>
 </LinearLayout>

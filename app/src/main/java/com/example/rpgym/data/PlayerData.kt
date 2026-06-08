@@ -2,9 +2,7 @@ package com.example.rpgym.data
 
 object PlayerData {
 
-    // =====================
     // PLAYER
-    // =====================
     var level = 1
     var xp = 0
 
@@ -16,10 +14,10 @@ object PlayerData {
 
     fun getStrength(): Int = strengthLevel * 5
 
+    //QUEST
+    var completedTasks = 0
 
-    // =====================
     // DUNGEON
-    // =====================
     var currentZone = 0
     var unlockedZone = 0
     var dungeonWave = 1
@@ -27,25 +25,14 @@ object PlayerData {
     var defeatedMonsters = 0
     val defeatedBosses = mutableSetOf<Int>()
 
-
-    // =====================
-    // QUEST SYSTEM
-    // =====================
-    var bossQuestProgress = 0
-    var bossQuestTarget = 10
-
-    var completedTasks = 0
-
-
-    // =====================
-    // MEDITATION SYSTEM (HP REGEN + TIMER)
-    // =====================
+    // MEDITATION
     var meditationStartTime: Long? = null
-
     private const val REGEN_PER_SEC = 1
 
     fun startMeditation() {
-        meditationStartTime = System.currentTimeMillis()
+        if (meditationStartTime == null) {
+            meditationStartTime = System.currentTimeMillis()
+        }
     }
 
     fun tickMeditation() {
@@ -58,41 +45,29 @@ object PlayerData {
     }
 
     fun getTimeToFullHp(): Long {
-
         val missing = maxHp - hp
         if (missing <= 0) return 0
 
         val start = meditationStartTime ?: return missing.toLong()
 
         val elapsed = (System.currentTimeMillis() - start) / 1000
-        val remaining = missing - elapsed
-
-        return remaining.coerceAtLeast(0)
+        return (missing - elapsed).coerceAtLeast(0)
     }
 
-
-    // =====================
-    // BOSS LOGIC
-    // =====================
+    // BOSS UNLOCK
     fun addBossKill(zone: Int): Boolean {
+        val first = defeatedBosses.add(zone)
 
-        val firstTime = defeatedBosses.add(zone)
-
-        if (firstTime) {
-            bossQuestProgress++
-
-            if (unlockedZone < 9) {
+        if (first) {
+            if (unlockedZone < DungeonRepository.zones.lastIndex) {
                 unlockedZone++
             }
         }
 
-        return firstTime
+        return first
     }
 
-
-    // =====================
-    // LEVEL SYSTEM
-    // =====================
+    // XP
     fun addXp(amount: Int) {
         xp += amount
         while (xp >= 100) {
@@ -107,23 +82,5 @@ object PlayerData {
             strengthXp -= 100
             strengthLevel++
         }
-    }
-
-
-    // =====================
-    // UI EVENT SYSTEM
-    // =====================
-    private val listeners = mutableSetOf<() -> Unit>()
-
-    fun addListener(l: () -> Unit) {
-        listeners.add(l)
-    }
-
-    fun removeListener(l: () -> Unit) {
-        listeners.remove(l)
-    }
-
-    fun notifyChange() {
-        listeners.forEach { it.invoke() }
     }
 }
