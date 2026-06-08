@@ -67,7 +67,7 @@ class BattleFragment : Fragment() {
     private fun attack() {
 
         // gracz bije
-        monster.hp -= PlayerData.getStrength()
+        monster.hp -= PlayerData.strength
 
         if (monster.hp <= 0) {
 
@@ -95,7 +95,7 @@ class BattleFragment : Fragment() {
         }
 
         // mob bije
-        PlayerData.hp -= monster.strength
+        PlayerData.damage(monster.strength)
 
         if (PlayerData.hp <= 0) {
 

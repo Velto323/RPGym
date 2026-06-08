@@ -1,10 +1,10 @@
 package com.example.rpgym.data
 
+import android.content.Context
+
 object PlayerData {
 
-    // =====================
-    // PLAYER STATS
-    // =====================
+    // ================= PLAYER =================
     var level = 1
     var xp = 0
 
@@ -15,111 +15,118 @@ object PlayerData {
     var maxHp = 100
 
     var gold = 0
-
-    var healthPotions = 0
-    var strengthPotions = 0
-
-    const val HEALTH_POTION_PRICE = 20
-    const val STRENGTH_POTION_PRICE = 20
-
-    fun addGold(amount: Int) {
-        gold += amount
-    }
-
-    fun spendGold(amount: Int): Boolean {
-        if (gold < amount) return false
-        gold -= amount
-        return true
-    }
-
-    fun buyHealthPotion(): Boolean {
-        if (!spendGold(HEALTH_POTION_PRICE)) return false
-        healthPotions++
-        return true
-    }
-
-    fun buyStrengthPotion(): Boolean {
-        if (!spendGold(STRENGTH_POTION_PRICE)) return false
-        strengthPotions++
-        return true
-    }
-
-    fun getStrength(): Int {
-
-        var damage = strengthLevel * 5
-
-        if (hasPowerPotion()) {
-            damage += 5
-        }
-
-        return damage
-    }
-
-    fun getCurrentMaxHp(): Int {
-        return if (hasLifePotion())
-            maxHp + 50
-        else
-            maxHp
-    }
-
-    // =====================
-    // QUEST / DUNGEON
-    // =====================
     var completedTasks = 0
+    var defeatedMonsters = 0
 
+    // FINAL DAMAGE (ZAMIAST getStrength())
+    val strength: Int
+        get() = strengthLevel * 5 + if (hasPowerPotion()) 5 else 0
+
+
+    // ================= DUNGEON =================
     var currentZone = 0
     var unlockedZone = 0
     var dungeonWave = 1
 
-    var defeatedMonsters = 0
     val defeatedBosses = mutableSetOf<Int>()
 
-    fun addBossKill(zone: Int): Boolean {
 
-        val first = defeatedBosses.add(zone)
+    // ================= MEDITATION =================
+    var meditationStartTime: Long? = null
+    var lastMeditationTick: Long = System.currentTimeMillis()
 
-        if (first) {
-            if (unlockedZone < DungeonRepository.zones.lastIndex) {
-                unlockedZone++
-            }
-        }
 
-        return first
+    // ================= LISTENERS =================
+    private val listeners = mutableSetOf<() -> Unit>()
+
+    fun addListener(l: () -> Unit) {
+        listeners.add(l)
     }
 
-    // =====================
-    // XP SYSTEM
-    // =====================
-    fun addXp(amount: Int) {
+    fun removeListener(l: () -> Unit) {
+        listeners.remove(l)
+    }
 
+    fun notifyChange() {
+        listeners.forEach { it.invoke() }
+    }
+
+
+    // ================= HP =================
+
+    fun damage(amount: Int) {
+        hp = (hp - amount).coerceAtLeast(0)
+        notifyChange()
+    }
+
+    fun heal(amount: Int) {
+        hp = (hp + amount).coerceAtMost(getCurrentMaxHp())
+        notifyChange()
+    }
+
+    fun getCurrentMaxHp(): Int {
+        return if (hasLifePotion()) maxHp + 50 else maxHp
+    }
+
+
+    // ================= XP =================
+
+    fun addXp(amount: Int) {
         xp += amount
 
         while (xp >= 100) {
-
             xp -= 100
             level++
 
             maxHp += 10
             hp = getCurrentMaxHp()
         }
+
+        notifyChange()
     }
 
     fun addStrengthXp(amount: Int) {
-
         strengthXp += amount
 
         while (strengthXp >= 100) {
             strengthXp -= 100
             strengthLevel++
         }
+
+        notifyChange()
     }
 
-    // =====================
-    // MEDITATION SYSTEM
-    // =====================
 
-    var meditationStartTime: Long? = null
-    var lastMeditationTick: Long = System.currentTimeMillis()
+    // ================= GOLD =================
+
+    fun addGold(amount: Int) {
+        gold += amount
+        notifyChange()
+    }
+
+    fun spendGold(amount: Int): Boolean {
+        if (gold < amount) return false
+        gold -= amount
+        notifyChange()
+        return true
+    }
+
+
+    // ================= DUNGEON =================
+
+    fun addBossKill(zone: Int): Boolean {
+        val first = defeatedBosses.add(zone)
+
+        if (first && unlockedZone < 9) {
+            unlockedZone++
+        }
+
+        notifyChange()
+        return first
+    }
+
+
+    // ================= MEDITATION =================
 
     fun startMeditation() {
         if (meditationStartTime == null) {
@@ -131,65 +138,132 @@ object PlayerData {
     fun tickMeditation() {
 
         val now = System.currentTimeMillis()
-
-        val seconds =
-            (now - lastMeditationTick) / 1000
+        val seconds = (now - lastMeditationTick) / 1000
 
         if (seconds <= 0) return
 
         val healPerSecond =
-            if (hasLifePotion()) 0.5
-            else 1.0
+            if (hasLifePotion()) 0.5 else 1.0
 
-        val healed =
-            (seconds * healPerSecond).toInt()
+        val healed = (seconds * healPerSecond).toInt()
 
-        hp = (hp + healed)
-            .coerceAtMost(getCurrentMaxHp())
+        hp = (hp + healed).coerceAtMost(getCurrentMaxHp())
 
         lastMeditationTick = now
+
+        notifyChange()
     }
 
     fun getTimeToFullHp(): Long {
-
-        val missing =
-            getCurrentMaxHp() - hp
-
+        val missing = getCurrentMaxHp() - hp
         if (missing <= 0) return 0
-
         return missing.toLong()
     }
 
-    // =====================
-    // ELIXIRS
-    // =====================
+
+    // ================= POTIONS =================
+    var healthPotions = 0
+    var strengthPotions = 0
 
     var powerPotionEndTime = 0L
     var lifePotionEndTime = 0L
 
-    fun hasPowerPotion(): Boolean {
-        return System.currentTimeMillis() < powerPotionEndTime
-    }
+    private const val POTION_DURATION = 60 * 60 * 1000L
 
-    fun hasLifePotion(): Boolean {
-        return System.currentTimeMillis() < lifePotionEndTime
-    }
-
-    fun activatePowerPotion(): Boolean {
-
-        if (strengthXp < 100) return false
-
-        strengthXp -= 100
-
-        powerPotionEndTime =
-            System.currentTimeMillis() + 60 * 60 * 1000
-
+    fun buyHealthPotion(): Boolean {
+        if (gold < 20) return false
+        gold -= 20
+        healthPotions++
+        notifyChange()
         return true
     }
 
-    fun activateLifePotion() {
+    fun buyStrengthPotion(): Boolean {
+        if (gold < 20) return false
+        gold -= 20
+        strengthPotions++
+        notifyChange()
+        return true
+    }
 
-        lifePotionEndTime =
-            System.currentTimeMillis() + 60 * 60 * 1000
+    // aktywacja (1 aktywna na raz)
+    fun activateHealthPotion(): Boolean {
+        if (healthPotions <= 0) return false
+
+        healthPotions--
+        lifePotionEndTime = System.currentTimeMillis() + POTION_DURATION
+
+        notifyChange()
+        return true
+    }
+
+    fun activateStrengthPotion(): Boolean {
+        if (strengthPotions <= 0) return false
+
+        strengthPotions--
+        powerPotionEndTime = System.currentTimeMillis() + POTION_DURATION
+
+        notifyChange()
+        return true
+    }
+
+    fun hasPowerPotion(): Boolean =
+        System.currentTimeMillis() < powerPotionEndTime
+
+    fun hasLifePotion(): Boolean =
+        System.currentTimeMillis() < lifePotionEndTime
+
+
+    // ================= SAVE / LOAD =================
+
+    fun save(context: Context) {
+        val p = context.getSharedPreferences("player", Context.MODE_PRIVATE)
+
+        p.edit()
+            .putInt("level", level)
+            .putInt("xp", xp)
+
+            .putInt("strengthLevel", strengthLevel)
+            .putInt("strengthXp", strengthXp)
+
+            .putInt("hp", hp)
+            .putInt("maxHp", maxHp)
+
+            .putInt("gold", gold)
+            .putInt("completedTasks", completedTasks)
+            .putInt("defeatedMonsters", defeatedMonsters)
+
+            .putInt("currentZone", currentZone)
+            .putInt("unlockedZone", unlockedZone)
+            .putInt("dungeonWave", dungeonWave)
+
+            .putLong("powerPotionEndTime", powerPotionEndTime)
+            .putLong("lifePotionEndTime", lifePotionEndTime)
+
+            .apply()
+    }
+
+    fun load(context: Context) {
+        val p = context.getSharedPreferences("player", Context.MODE_PRIVATE)
+
+        level = p.getInt("level", 1)
+        xp = p.getInt("xp", 0)
+
+        strengthLevel = p.getInt("strengthLevel", 1)
+        strengthXp = p.getInt("strengthXp", 0)
+
+        hp = p.getInt("hp", 100)
+        maxHp = p.getInt("maxHp", 100)
+
+        gold = p.getInt("gold", 0)
+        completedTasks = p.getInt("completedTasks", 0)
+        defeatedMonsters = p.getInt("defeatedMonsters", 0)
+
+        currentZone = p.getInt("currentZone", 0)
+        unlockedZone = p.getInt("unlockedZone", 0)
+        dungeonWave = p.getInt("dungeonWave", 1)
+
+        powerPotionEndTime = p.getLong("powerPotionEndTime", 0L)
+        lifePotionEndTime = p.getLong("lifePotionEndTime", 0L)
     }
 }

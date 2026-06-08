@@ -11,6 +11,7 @@
         android:scaleType="centerCrop"
         android:contentDescription="@null"/>
 
+    <!-- BACK BUTTON -->
     <ImageButton
         android:id="@+id/btnBack"
         android:layout_width="48dp"
@@ -28,81 +29,63 @@
         android:orientation="vertical"
         android:padding="16dp">
 
+        <!-- TITLE -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
-            android:text="Sklep"/>
+            android:text="Sklep"
+            android:textSize="26sp"/>
 
+        <!-- GOLD -->
         <TextView
             android:id="@+id/tvShopGold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textSize="18sp"
-            android:text="Złoto: 0"/>
+            android:layout_marginTop="10dp"
+            android:text="Złoto: 0"
+            android:textSize="18sp"/>
 
-        <LinearLayout
+        <!-- PLAYER INFO -->
+        <TextView
+            android:id="@+id/tvShopInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:layout_marginTop="10dp"
+            android:text="HP / Siła"
+            android:textSize="16sp"/>
 
-            <ImageView
-                android:id="@+id/ivHealthPotionIcon"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_marginEnd="8dp"
-                android:contentDescription="Mikstura zdrowia"
-                android:src="@drawable/health_potion"/>
+        <!-- POTION COUNTERS -->
+        <TextView
+            android:id="@+id/tvHealthPotions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="HP potions: 0"
+            android:textSize="16sp"
+            android:layout_marginTop="10dp"/>
 
-            <TextView
-                android:id="@+id/tvHealthPotions"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:text="Mikstury zdrowia: 0"/>
+        <TextView
+            android:id="@+id/tvStrengthPotions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="STR potions: 0"
+            android:textSize="16sp"
+            android:layout_marginTop="4dp"/>
 
-        </LinearLayout>
-
+        <!-- HP HEAL -->
         <Button
             android:id="@+id/btnBuyHealthPotion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Kup miksturę zdrowia (20 złota)"/>
+            android:layout_marginTop="20dp"
+            android:text="Mikstury HP (20 złota)"/>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/ivStrengthPotionIcon"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_marginEnd="8dp"
-                android:contentDescription="Mikstura siły"
-                android:src="@drawable/strength_potion"/>
-
-            <TextView
-                android:id="@+id/tvStrengthPotions"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:text="Mikstury siły: 0"/>
-
-        </LinearLayout>
-
+        <!-- STRENGTH BOOST -->
         <Button
             android:id="@+id/btnBuyStrengthPotion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Kup miksturę siły (20 złota)"/>
+            android:layout_marginTop="10dp"
+            android:text="Mikstury siły (20 złota)"/>
 
     </LinearLayout>
 

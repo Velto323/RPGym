@@ -19,36 +19,57 @@ class ShopFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
         val view = inflater.inflate(R.layout.fragment_shop, container, false)
 
         val tvGold = view.findViewById<TextView>(R.id.tvShopGold)
+        val tvInfo = view.findViewById<TextView>(R.id.tvShopInfo)
+
         val tvHealthPotions = view.findViewById<TextView>(R.id.tvHealthPotions)
         val tvStrengthPotions = view.findViewById<TextView>(R.id.tvStrengthPotions)
 
-        fun refreshTexts() {
+        fun refresh() {
+
             tvGold.text = "Złoto: ${PlayerData.gold}"
-            tvHealthPotions.text = "Mikstury zdrowia: ${PlayerData.healthPotions}"
-            tvStrengthPotions.text = "Mikstury siły: ${PlayerData.strengthPotions}"
+
+            tvInfo.text =
+                "HP: ${PlayerData.hp}/${PlayerData.getCurrentMaxHp()}\n" +
+                        "Siła: ${PlayerData.strengthLevel}"
+
+            tvHealthPotions.text =
+                "Mikstury HP: ${PlayerData.healthPotions}"
+
+            tvStrengthPotions.text =
+                "Mikstury siły: ${PlayerData.strengthPotions}"
         }
 
-        refreshTexts()
+        refresh()
 
+        // ================= BUY HP POTION =================
         view.findViewById<Button>(R.id.btnBuyHealthPotion).setOnClickListener {
-            if (PlayerData.buyHealthPotion()) {
-                refreshTexts()
-            } else {
+
+            if (!PlayerData.buyHealthPotion()) {
                 Toast.makeText(requireContext(), "Za mało złota!", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
+
+            Toast.makeText(requireContext(), "Kupiono miksturę HP!", Toast.LENGTH_SHORT).show()
+            refresh()
         }
 
+        // ================= BUY STRENGTH POTION =================
         view.findViewById<Button>(R.id.btnBuyStrengthPotion).setOnClickListener {
-            if (PlayerData.buyStrengthPotion()) {
-                refreshTexts()
-            } else {
+
+            if (!PlayerData.buyStrengthPotion()) {
                 Toast.makeText(requireContext(), "Za mało złota!", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
+
+            Toast.makeText(requireContext(), "Kupiono miksturę siły!", Toast.LENGTH_SHORT).show()
+            refresh()
         }
 
+        // ================= BACK =================
         view.findViewById<ImageButton>(R.id.btnBack).setOnClickListener {
             requireActivity().supportFragmentManager.popBackStack()
         }

@@ -24,88 +24,78 @@ class TrainingFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        val view = inflater.inflate(
-            R.layout.fragment_training,
-            container,
-            false
-        )
+        val view = inflater.inflate(R.layout.fragment_training, container, false)
 
-        tvStrengthInfo =
-            view.findViewById(R.id.tvStrengthInfo)
+        tvStrengthInfo = view.findViewById(R.id.tvStrengthInfo)
+        tvStrengthXp = view.findViewById(R.id.tvStrengthXp)
+        progressStrength = view.findViewById(R.id.progressStrength)
 
-        tvStrengthXp =
-            view.findViewById(R.id.tvStrengthXp)
+        // =========================
+        // TRENING
+        // =========================
 
-        progressStrength =
-            view.findViewById(R.id.progressStrength)
+        view.findViewById<Button>(R.id.btnPushups).setOnClickListener {
+            PlayerData.addStrengthXp(10)
+            PlayerData.save(requireContext())
+            updateUI()
+        }
 
-        view.findViewById<Button>(R.id.btnPushups)
-            .setOnClickListener {
+        view.findViewById<Button>(R.id.btnPullups).setOnClickListener {
+            PlayerData.addStrengthXp(15)
+            PlayerData.save(requireContext())
+            updateUI()
+        }
 
-                PlayerData.addStrengthXp(10)
-                updateUI()
+        view.findViewById<Button>(R.id.btnRun).setOnClickListener {
+            PlayerData.addStrengthXp(5)
+            PlayerData.save(requireContext())
+            updateUI()
+        }
+
+        view.findViewById<Button>(R.id.btnSquats).setOnClickListener {
+            PlayerData.addStrengthXp(8)
+            PlayerData.save(requireContext())
+            updateUI()
+        }
+
+        // =========================
+        // ELIXIR ŻYCIA
+        // =========================
+        view.findViewById<Button>(R.id.btnLifePotion).setOnClickListener {
+
+            if (PlayerData.activateHealthPotion()) {
+                showMessage("❤️ HP Potion", "+50% regen / bonus HP przez 1h")
+            } else {
+                showMessage("Brak", "Nie masz mikstury życia")
             }
 
-        view.findViewById<Button>(R.id.btnPullups)
-            .setOnClickListener {
+            PlayerData.save(requireContext())
+            updateUI()
+        }
 
-                PlayerData.addStrengthXp(15)
-                updateUI()
+        // =========================
+        // ELIXIR SIŁY
+        // =========================
+        view.findViewById<Button>(R.id.btnPowerPotion).setOnClickListener {
+
+            if (PlayerData.activateStrengthPotion()) {
+                showMessage("⚡ Siła", "+damage przez 1h")
+            } else {
+                showMessage("Brak", "Nie masz mikstury siły")
             }
 
-        view.findViewById<Button>(R.id.btnRun)
-            .setOnClickListener {
-
-                PlayerData.addStrengthXp(5)
-                updateUI()
-            }
-
-        view.findViewById<Button>(R.id.btnSquats)
-            .setOnClickListener {
-
-                PlayerData.addStrengthXp(8)
-                updateUI()
-            }
-
-        view.findViewById<Button>(R.id.btnLifePotion)
-            .setOnClickListener {
-
-                PlayerData.activateLifePotion()
-
-                showMessage(
-                    "❤️ Eliksir Życia",
-                    "+50 HP przez 1 godzinę\nMedytacja 50% wolniejsza"
-                )
-
-                updateUI()
-            }
-
-        view.findViewById<Button>(R.id.btnPowerPotion)
-            .setOnClickListener {
-
-                if (!PlayerData.activatePowerPotion()) {
-
-                    showMessage(
-                        "Brak XP",
-                        "Potrzebujesz 100 XP siły."
-                    )
-
-                    return@setOnClickListener
-                }
-
-                showMessage(
-                    "⚡ Eliksir Siły",
-                    "+5 siły przez 1 godzinę"
-                )
-
-                updateUI()
-            }
+            PlayerData.save(requireContext())
+            updateUI()
+        }
 
         updateUI()
 
         return view
     }
 
+    // =========================
+    // UI
+    // =========================
     private fun updateUI() {
 
         tvStrengthInfo.text =
@@ -118,10 +108,10 @@ class TrainingFragment : Fragment() {
             PlayerData.strengthXp
     }
 
-    private fun showMessage(
-        title: String,
-        message: String
-    ) {
+    // =========================
+    // DIALOG
+    // =========================
+    private fun showMessage(title: String, message: String) {
 
         AlertDialog.Builder(requireContext())
             .setTitle(title)
