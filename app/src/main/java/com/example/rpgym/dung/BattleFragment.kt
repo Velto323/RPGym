@@ -75,18 +75,18 @@ class BattleFragment : Fragment() {
 
             if (monster.isBoss) {
 
+                PlayerData.addXp((zoneIndex + 1) * 25)
+
                 val firstTime = PlayerData.addBossKill(zoneIndex)
-                QuestManager.onBossKilled(zoneIndex)
 
                 AlertDialog.Builder(requireContext())
-                    .setTitle("👑 BOSS POKONANY!")
+                    .setTitle("👑 BOSS POKONANY")
                     .setMessage(
                         if (firstTime)
-                            "Gratulacje! Odblokowano nową lokację!"
+                            "Odblokowano nową lokację!\n+${(zoneIndex + 1) * 25} XP"
                         else
-                            "Pokonałeś bossa ponownie!"
+                            "+${(zoneIndex + 1) * 25} XP"
                     )
-                    .setPositiveButton("OK", null)
                     .show()
             }
 
