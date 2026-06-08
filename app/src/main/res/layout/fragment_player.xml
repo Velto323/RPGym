@@ -23,6 +23,7 @@
             android:id="@+id/tvPlayerLevel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
             android:textSize="24sp" />
 
         <!-- XP -->
@@ -30,6 +31,7 @@
             android:id="@+id/tvPlayerXp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
             android:textSize="20sp" />
 
         <!-- SHOP -->
@@ -47,12 +49,15 @@
             android:layout_height="wrap_content"
             android:textSize="20sp"
             android:layout_marginTop="16dp"/>
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
 
         <!-- GOLD -->
         <TextView
             android:id="@+id/tvPlayerGold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
             android:textSize="20sp" />
 
         <!-- HP -->
@@ -63,6 +68,15 @@
             android:textSize="20sp"
             android:textColor="#FF4444"
             android:layout_marginTop="10dp"/>
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/btnTrophies"
+            android:layout_width="132dp"
+            android:layout_height="69dp"
+            android:layout_marginTop="8dp"
+            android:text="Trofea" />
 
         <!-- ELIXIRS STATUS -->
         <TextView
@@ -71,13 +85,15 @@
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:text="Eliksir siły: OFF" />
+            android:textColor="@android:color/white"/>
 
         <TextView
             android:id="@+id/tvPlayerLifePotion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="18sp"
-            android:text="Eliksir życia: OFF" />
+            android:text="Eliksir życia: OFF" 
+            android:textColor="@android:color/white"/>
 
         <!-- TROPHIES -->
         <Button
@@ -86,6 +102,7 @@
             android:layout_height="69dp"
             android:layout_marginTop="20dp"
             android:text="Trofea" />
+
 
         <!-- LOGOUT -->
         <Button
