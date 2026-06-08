@@ -3,6 +3,7 @@ package com.example.rpgym.main
 import com.example.rpgym.BuildConfig
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.auth.Auth
+import io.github.jan.supabase.postgrest.Postgrest
 
 object SupabaseClient {
     private val SUPABASE_URL = BuildConfig.SUPABASE_URL
@@ -13,5 +14,6 @@ object SupabaseClient {
         supabaseKey = SUPABASE_KEY
     ) {
         install(Auth)
+        install(Postgrest)
     }
 }

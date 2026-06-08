@@ -11,6 +11,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.rpgym.main.LoginActivity
 import com.example.rpgym.data.PlayerData
+import com.example.rpgym.data.PlayerRepository
+import com.example.rpgym.data.local.AppDatabase
 import com.example.rpgym.R
 import com.example.rpgym.main.SupabaseClient
 import io.github.jan.supabase.auth.auth
@@ -71,6 +73,13 @@ class PlayerFragment : Fragment() {
 
         view.findViewById<Button>(R.id.btnLogout).setOnClickListener {
             lifecycleScope.launch {
+                val uid = SupabaseClient.client.auth.currentUserOrNull()?.id
+                if (uid != null) {
+                    runCatching {
+                        PlayerRepository(AppDatabase.getInstance(requireContext().applicationContext))
+                            .savePlayer(uid)
+                    }
+                }
                 try {
                     SupabaseClient.client.auth.signOut()
                 } catch (_: Exception) {}

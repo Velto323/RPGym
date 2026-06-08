@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -63,8 +64,17 @@ dependencies {
     // Supabase
     implementation(platform(libs.supabase.bom))
     implementation(libs.supabase.auth)
+    implementation(libs.supabase.postgrest)
     implementation(libs.ktor.client.android)
     implementation(libs.kotlinx.serialization.json)
+
+    // Room
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    ksp(libs.room.compiler)
+
+    // Coroutines
+    implementation(libs.kotlinx.coroutines.android)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
