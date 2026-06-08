@@ -9,4 +9,4 @@
         android:layout_height="wrap_content"
         android:padding="16dp"/>
 
-</FrameLayout>
+</ScrollView>
