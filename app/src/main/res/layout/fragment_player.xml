@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         android:src="@drawable/player_background"
         android:scaleType="centerCrop"
-        android:contentDescription="@null"/>
+        android:contentDescription="@null" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,6 +18,7 @@
         android:orientation="vertical"
         android:padding="16dp">
 
+        <!-- LEVEL -->
         <TextView
             android:id="@+id/tvPlayerLevel"
             android:layout_width="wrap_content"
@@ -25,6 +26,7 @@
             android:textColor="@android:color/white"
             android:textSize="24sp" />
 
+        <!-- XP -->
         <TextView
             android:id="@+id/tvPlayerXp"
             android:layout_width="wrap_content"
@@ -32,31 +34,40 @@
             android:textColor="@android:color/white"
             android:textSize="20sp" />
 
+        <!-- SHOP -->
         <Button
             android:id="@+id/btnShop"
             android:layout_width="132dp"
             android:layout_height="72dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="24dp"
             android:text="Sklep" />
 
+        <!-- STRENGTH -->
         <TextView
             android:id="@+id/tvStrength"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:layout_marginTop="16dp"/>
             android:textColor="@android:color/white"
             android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/tvCompletedTasks"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/white"
-            android:textSize="20sp" />
-
+        <!-- GOLD -->
         <TextView
             android:id="@+id/tvPlayerGold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
+
+        <!-- HP -->
+        <TextView
+            android:id="@+id/tvPlayerHealth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textColor="#FF4444"
+            android:layout_marginTop="10dp"/>
             android:textColor="@android:color/white"
             android:textSize="20sp" />
 
@@ -67,26 +78,45 @@
             android:layout_marginTop="8dp"
             android:text="Trofea" />
 
+        <!-- ELIXIRS STATUS -->
         <TextView
-            android:id="@+id/tvPlayerHealthPotions"
+            android:id="@+id/tvPlayerPowerPotion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/white"
-            android:textSize="20sp" />
+            android:textSize="18sp"
+            android:text="Eliksir siły: OFF" />
+            android:textColor="@android:color/white"/>
 
         <TextView
-            android:id="@+id/tvPlayerStrengthPotions"
+            android:id="@+id/tvPlayerLifePotion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/white"
-            android:textSize="20sp" />
+            android:textSize="18sp"
+            android:text="Eliksir życia: OFF" 
+            android:textColor="@android:color/white"/>
 
+        <!-- TROPHIES -->
+        <Button
+            android:id="@+id/btnTrophies"
+            android:layout_width="132dp"
+            android:layout_height="69dp"
+            android:layout_marginTop="20dp"
+            android:text="Trofea" />
+
+
+        <!-- LOGOUT -->
         <Button
             android:id="@+id/btnLogout"
             android:layout_width="146dp"
             android:layout_height="78dp"
             android:layout_marginTop="32dp"
             android:text="Wyloguj" />
+
+        <TextView
+            android:id="@+id/tvCompletedTasks"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp" />
 
     </LinearLayout>
 

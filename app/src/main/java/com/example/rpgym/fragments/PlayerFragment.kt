@@ -25,14 +25,36 @@ class PlayerFragment : Fragment() {
     ): View {
         val view = inflater.inflate(R.layout.fragment_player, container, false)
 
-        view.findViewById<TextView>(R.id.tvPlayerLevel).text = "Poziom: ${PlayerData.level}"
-        view.findViewById<TextView>(R.id.tvPlayerXp).text = "XP: ${PlayerData.xp}/100"
-        view.findViewById<TextView>(R.id.tvStrength).text = "Siła: ${PlayerData.strengthLevel}"
-        view.findViewById<TextView>(R.id.tvCompletedTasks).text = "Questy ukończone: ${PlayerData.completedTasks}"
-        view.findViewById<TextView>(R.id.tvPlayerGold).text = "Złoto: ${PlayerData.gold}"
-        view.findViewById<TextView>(R.id.tvPlayerHealthPotions).text = "Mikstury zdrowia: ${PlayerData.healthPotions}"
-        view.findViewById<TextView>(R.id.tvPlayerStrengthPotions).text = "Mikstury siły: ${PlayerData.strengthPotions}"
+// ================= LEVEL / XP =================
+        view.findViewById<TextView>(R.id.tvPlayerLevel).text =
+            "Poziom: ${PlayerData.level}"
 
+        view.findViewById<TextView>(R.id.tvPlayerXp).text =
+            "XP: ${PlayerData.xp}/100"
+
+// ================= STRENGTH =================
+        view.findViewById<TextView>(R.id.tvStrength).text =
+            "Siła: ${PlayerData.strengthLevel} (${PlayerData.strength})"
+
+// ================= QUESTS =================
+// (jeśli jeszcze nie masz systemu questów zostaje 0)
+        view.findViewById<TextView>(R.id.tvCompletedTasks).text =
+            "Questy ukończone: ${PlayerData.defeatedBosses.size}"
+
+// ================= GOLD =================
+        view.findViewById<TextView>(R.id.tvPlayerGold).text =
+            "Złoto: ${PlayerData.gold}"
+
+// ================= HP =================
+        view.findViewById<TextView>(R.id.tvPlayerHealth).text =
+            "HP: ${PlayerData.hp}/${PlayerData.getCurrentMaxHp()}"
+
+// ================= ELIXIRS (BUFFY) =================
+        view.findViewById<TextView>(R.id.tvPlayerPowerPotion).text =
+            "Eliksir siły: ${if (PlayerData.hasPowerPotion()) "AKTYWNY" else "OFF"}"
+
+        view.findViewById<TextView>(R.id.tvPlayerLifePotion).text =
+            "Eliksir życia: ${if (PlayerData.hasLifePotion()) "AKTYWNY" else "OFF"}"
         view.findViewById<Button>(R.id.btnShop).setOnClickListener {
             requireActivity().supportFragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainer, ShopFragment())
