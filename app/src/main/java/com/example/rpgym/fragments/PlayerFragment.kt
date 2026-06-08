@@ -29,6 +29,23 @@ class PlayerFragment : Fragment() {
         view.findViewById<TextView>(R.id.tvPlayerXp).text = "XP: ${PlayerData.xp}/100"
         view.findViewById<TextView>(R.id.tvStrength).text = "Siła: ${PlayerData.strengthLevel}"
         view.findViewById<TextView>(R.id.tvCompletedTasks).text = "Questy ukończone: ${PlayerData.completedTasks}"
+        view.findViewById<TextView>(R.id.tvPlayerGold).text = "Złoto: ${PlayerData.gold}"
+        view.findViewById<TextView>(R.id.tvPlayerHealthPotions).text = "Mikstury zdrowia: ${PlayerData.healthPotions}"
+        view.findViewById<TextView>(R.id.tvPlayerStrengthPotions).text = "Mikstury siły: ${PlayerData.strengthPotions}"
+
+        view.findViewById<Button>(R.id.btnShop).setOnClickListener {
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainer, ShopFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+
+        view.findViewById<Button>(R.id.btnTrophies).setOnClickListener {
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainer, TrophiesFragment())
+                .addToBackStack(null)
+                .commit()
+        }
 
         view.findViewById<Button>(R.id.btnLogout).setOnClickListener {
             lifecycleScope.launch {
