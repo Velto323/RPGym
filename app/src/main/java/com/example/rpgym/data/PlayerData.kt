@@ -1,4 +1,4 @@
-package com.example.rpgym
+package com.example.rpgym.data
 
 object PlayerData {
 
@@ -16,6 +16,7 @@ object PlayerData {
 
     fun getStrength(): Int = strengthLevel * 5
 
+
     // =====================
     // DUNGEON
     // =====================
@@ -26,29 +27,49 @@ object PlayerData {
     var defeatedMonsters = 0
     val defeatedBosses = mutableSetOf<Int>()
 
+
     // =====================
-    // QUESTS
+    // QUEST SYSTEM
     // =====================
     var bossQuestProgress = 0
     var bossQuestTarget = 10
 
     var completedTasks = 0
 
-    // =====================
-    // MEDITATION (PASSIVE HEAL)
-    // =====================
-    var lastMeditationTick: Long = System.currentTimeMillis()
 
-    fun meditateTick() {
-        val now = System.currentTimeMillis()
-        val seconds = (now - lastMeditationTick) / 1000
+    // =====================
+    // MEDITATION SYSTEM (HP REGEN + TIMER)
+    // =====================
+    var meditationStartTime: Long? = null
 
-        if (seconds > 0) {
-            hp += seconds.toInt()
-            if (hp > maxHp) hp = maxHp
-            lastMeditationTick = now
-        }
+    private const val REGEN_PER_SEC = 1
+
+    fun startMeditation() {
+        meditationStartTime = System.currentTimeMillis()
     }
+
+    fun tickMeditation() {
+        val start = meditationStartTime ?: return
+
+        val seconds = (System.currentTimeMillis() - start) / 1000
+        val healed = (seconds * REGEN_PER_SEC).toInt()
+
+        hp = (hp + healed).coerceAtMost(maxHp)
+    }
+
+    fun getTimeToFullHp(): Long {
+
+        val missing = maxHp - hp
+        if (missing <= 0) return 0
+
+        val start = meditationStartTime ?: return missing.toLong()
+
+        val elapsed = (System.currentTimeMillis() - start) / 1000
+        val remaining = missing - elapsed
+
+        return remaining.coerceAtLeast(0)
+    }
+
 
     // =====================
     // BOSS LOGIC
@@ -59,11 +80,15 @@ object PlayerData {
 
         if (firstTime) {
             bossQuestProgress++
-            if (unlockedZone < 9) unlockedZone++
+
+            if (unlockedZone < 9) {
+                unlockedZone++
+            }
         }
 
         return firstTime
     }
+
 
     // =====================
     // LEVEL SYSTEM
@@ -84,8 +109,9 @@ object PlayerData {
         }
     }
 
+
     // =====================
-    // UI UPDATE SYSTEM
+    // UI EVENT SYSTEM
     // =====================
     private val listeners = mutableSetOf<() -> Unit>()
 

@@ -1,14 +1,20 @@
-package com.example.rpgym.fragments
+package com.example.rpgym.dung
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.*
+import android.widget.TextView
 import androidx.fragment.app.Fragment
-import com.example.rpgym.PlayerData
 import com.example.rpgym.R
+import com.example.rpgym.data.PlayerData
 
 class MeditationFragment : Fragment() {
 
-    private var running = true
+    private val handler = Handler(Looper.getMainLooper())
+
+    private lateinit var tvHp: TextView
+    private lateinit var tvTimer: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -18,27 +24,38 @@ class MeditationFragment : Fragment() {
 
         val view = inflater.inflate(R.layout.fragment_meditation, container, false)
 
-        startRegen()
+        tvHp = view.findViewById(R.id.tvHp)
+        tvTimer = view.findViewById(R.id.tvTimer)
+
+        PlayerData.startMeditation()
+        startLoop()
 
         return view
     }
 
-    private fun startRegen() {
+    private fun startLoop() {
 
-        Thread {
+        handler.post(object : Runnable {
+            override fun run() {
 
-            while (running) {
+                PlayerData.tickMeditation()
 
-                PlayerData.meditateTick()
-                PlayerData.notifyChange()
+                updateUI()
 
-                Thread.sleep(1000)
+                handler.postDelayed(this, 1000)
             }
-        }.start()
+        })
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        running = false
+    private fun updateUI() {
+
+        tvHp.text = "HP: ${PlayerData.hp} / ${PlayerData.maxHp}"
+
+        val time = PlayerData.getTimeToFullHp()
+
+        tvTimer.text = if (time > 0)
+            "Do pełnego HP: ${time}s"
+        else
+            "HP pełne ✔"
     }
 }

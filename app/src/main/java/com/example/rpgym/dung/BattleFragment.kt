@@ -2,15 +2,24 @@ package com.example.rpgym.dung
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.view.*
-import android.widget.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
 import androidx.fragment.app.Fragment
-import com.example.rpgym.*
-import com.example.rpgym.data.*
+import com.example.rpgym.R
+import com.example.rpgym.data.Monster
+import com.example.rpgym.data.MonsterRepository
+import com.example.rpgym.data.PlayerData
 
 class BattleFragment : Fragment() {
 
     private lateinit var monster: Monster
+
+    private lateinit var tvRound: TextView
+    private lateinit var tvMonster: TextView
+    private lateinit var tvHp: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -19,6 +28,10 @@ class BattleFragment : Fragment() {
     ): View {
 
         val view = inflater.inflate(R.layout.fragment_battle, container, false)
+
+        tvRound = view.findViewById(R.id.tvRound)
+        tvMonster = view.findViewById(R.id.tvMonster)
+        tvHp = view.findViewById(R.id.tvHp)
 
         spawnMonster()
         updateUI()
@@ -61,15 +74,14 @@ class BattleFragment : Fragment() {
 
     private fun onDeath() {
 
-        PlayerData.hp = PlayerData.maxHp
         PlayerData.dungeonWave = 1
 
         spawnMonster()
         updateUI()
 
         AlertDialog.Builder(requireContext())
-            .setTitle("💀 ZGINĄŁEŚ")
-            .setMessage("Wracasz do 1 fali.")
+            .setTitle("💀 Zginąłeś")
+            .setMessage("Wracasz do pierwszej fali lochu.")
             .setPositiveButton("OK", null)
             .show()
 
@@ -79,17 +91,17 @@ class BattleFragment : Fragment() {
     private fun onKill() {
 
         val zone = PlayerData.currentZone
-        val wasBoss = monster.isBoss
 
         PlayerData.defeatedMonsters++
 
-        if (wasBoss) {
+        if (monster.isBoss) {
 
-            val first = PlayerData.addBossKill(zone)
+            val firstKill = PlayerData.addBossKill(zone)
 
-            if (first) {
+            if (firstKill) {
+
                 AlertDialog.Builder(requireContext())
-                    .setTitle("🎉 BOSS!")
+                    .setTitle("🎉 Boss pokonany")
                     .setMessage("Odblokowano nową lokację!")
                     .setPositiveButton("OK", null)
                     .show()
@@ -98,6 +110,7 @@ class BattleFragment : Fragment() {
             PlayerData.dungeonWave = 1
 
         } else {
+
             PlayerData.dungeonWave++
         }
 
@@ -108,7 +121,9 @@ class BattleFragment : Fragment() {
     }
 
     private fun updateUI() {
-        view?.findViewById<TextView>(R.id.tvRound)?.text =
-            "Fala: ${PlayerData.dungeonWave}"
+
+        tvRound.text = "Fala: ${PlayerData.dungeonWave}"
+        tvMonster.text = monster.name
+        tvHp.text = "HP: ${monster.hp}"
     }
 }

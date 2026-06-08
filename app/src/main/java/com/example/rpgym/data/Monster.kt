@@ -1,8 +1,8 @@
 package com.example.rpgym.data
 
 data class Monster(
-    var name: String,
+    val name: String,
     var hp: Int,
-    var strength: Int,
-    var isBoss: Boolean = false
+    val strength: Int,
+    val isBoss: Boolean
 )
