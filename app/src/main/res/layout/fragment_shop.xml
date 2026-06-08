@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -9,7 +10,7 @@
         android:layout_height="match_parent"
         android:src="@drawable/shop_background"
         android:scaleType="centerCrop"
-        android:contentDescription="@null"/>
+        android:contentDescription="@null" />
 
     <ImageButton
         android:id="@+id/btnBack"
@@ -19,7 +20,9 @@
         android:layout_margin="16dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="Wstecz"
-        android:src="@drawable/ic_arrow_back"/>
+        android:src="@drawable/ic_arrow_back"
+        app:tint="@android:color/white"
+        android:fitsSystemWindows="true"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,16 +34,18 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
-            android:text="Sklep"/>
+            android:text="Sklep"
+            android:textColor="@android:color/white"
+            android:textSize="24sp" />
 
         <TextView
             android:id="@+id/tvShopGold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:textSize="18sp"
-            android:text="Złoto: 0"/>
+            android:text="Złoto: 0"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -61,8 +66,9 @@
                 android:id="@+id/tvHealthPotions"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:text="Mikstury zdrowia: 0"/>
+                android:text="Mikstury zdrowia: 0"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
 
         </LinearLayout>
 
@@ -92,8 +98,9 @@
                 android:id="@+id/tvStrengthPotions"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:text="Mikstury siły: 0"/>
+                android:text="Mikstury siły: 0"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
 
         </LinearLayout>
 

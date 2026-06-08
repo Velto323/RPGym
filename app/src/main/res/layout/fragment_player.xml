@@ -22,12 +22,14 @@
             android:id="@+id/tvPlayerLevel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
             android:textSize="24sp" />
 
         <TextView
             android:id="@+id/tvPlayerXp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
             android:textSize="20sp" />
 
         <Button
@@ -41,18 +43,21 @@
             android:id="@+id/tvStrength"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
             android:textSize="20sp" />
 
         <TextView
             android:id="@+id/tvCompletedTasks"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
             android:textSize="20sp" />
 
         <TextView
             android:id="@+id/tvPlayerGold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
             android:textSize="20sp" />
 
         <Button
@@ -66,12 +71,14 @@
             android:id="@+id/tvPlayerHealthPotions"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
             android:textSize="20sp" />
 
         <TextView
             android:id="@+id/tvPlayerStrengthPotions"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
             android:textSize="20sp" />
 
         <Button
