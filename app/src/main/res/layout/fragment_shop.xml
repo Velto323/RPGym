@@ -78,23 +78,6 @@
                 android:textColor="@android:color/white"
                 android:textSize="16sp" />
 
-        <!-- POTION COUNTERS -->
-        <TextView
-            android:id="@+id/tvHealthPotions"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="HP potions: 0"
-            android:textSize="16sp"
-            android:layout_marginTop="10dp"/>
-
-        <TextView
-            android:id="@+id/tvStrengthPotions"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="STR potions: 0"
-            android:textSize="16sp"
-            android:layout_marginTop="4dp"/>
-
         <!-- HP HEAL -->
         <Button
             android:id="@+id/btnBuyHealthPotion"
