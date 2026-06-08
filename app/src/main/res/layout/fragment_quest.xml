@@ -1,70 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:id="@+id/questContainer"
         android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:paddingTop="820dp"
-        android:padding="20dp"
-        android:textStyle="bold"
-        android:textSize="22sp"
-        android:layout_marginTop="20dp"
-        >
-        
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="⚔️ Quest Główny"
-            android:textSize="24sp"
-            android:textStyle="bold"/>
-
-        <TextView
-            android:id="@+id/tvMainQuest"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Pokonaj Króla Goblinów"
-            android:textSize="18sp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="📅 Questy Dzienne"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:layout_marginTop="24dp"/>
-
-        <TextView
-            android:id="@+id/tvDailyQuest1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="• Pokonaj 3 potwory"/>
-
-        <TextView
-            android:id="@+id/tvDailyQuest2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="• Wykonaj trening 3 razy"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="🖼 Mapa Potworów"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:layout_marginTop="24dp"/>
-
-        <TextView
-            android:id="@+id/tvMonsterMap"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=" Król Goblinów&#10;🔒 Wilkołak&#10;🔒 Kamienny Troll"/>
-
-    </LinearLayout>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"/>
 
 </ScrollView>

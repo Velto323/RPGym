@@ -1,11 +1,16 @@
-package com.example.rpgym
+package com.example.rpgym.main
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.example.rpgym.R
 import com.example.rpgym.databinding.ActivityMainBinding
-import com.example.rpgym.fragments.*
+import com.example.rpgym.dung.DungeonHubFragment
+import com.example.rpgym.home.HomeFragment
+import com.example.rpgym.fragments.PlayerFragment
+import com.example.rpgym.quest.QuestFragment
+import com.example.rpgym.fragments.TrainingFragment
 import io.github.jan.supabase.auth.auth
 
 class MainActivity : AppCompatActivity() {
@@ -29,11 +34,17 @@ class MainActivity : AppCompatActivity() {
 
         binding.bottomNav.setOnItemSelectedListener {
             when (it.itemId) {
+
                 R.id.nav_home -> { show(HomeFragment()); true }
+
                 R.id.nav_training -> { show(TrainingFragment()); true }
-                R.id.nav_dungeon -> { show(DungeonFragment()); true }
+
+                R.id.nav_dungeon -> { show(DungeonHubFragment()); true }
+
                 R.id.nav_quests -> { show(QuestFragment()); true }
+
                 R.id.nav_player -> { show(PlayerFragment()); true }
+
                 else -> false
             }
         }

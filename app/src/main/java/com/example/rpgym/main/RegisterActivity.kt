@@ -1,4 +1,4 @@
-package com.example.rpgym
+package com.example.rpgym.main
 
 import android.os.Bundle
 import android.widget.Toast

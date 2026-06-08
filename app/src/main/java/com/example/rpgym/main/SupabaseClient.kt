@@ -1,5 +1,6 @@
-package com.example.rpgym
+package com.example.rpgym.main
 
+import com.example.rpgym.BuildConfig
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.auth.Auth
 
