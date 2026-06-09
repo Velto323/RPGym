@@ -55,6 +55,17 @@
         android:layout_marginTop="6dp"/>
     </LinearLayout>
 
+    <!-- LOADING INDICATOR -->
+    <ProgressBar
+        android:id="@+id/loadingIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <!-- MIEJSCE NA FRAGMENTY -->
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainer"
