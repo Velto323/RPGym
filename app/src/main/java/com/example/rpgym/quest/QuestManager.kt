@@ -1,6 +1,7 @@
 package com.example.rpgym.quest
 
 import android.content.Context
+import com.example.rpgym.data.DungeonRepository
 import com.example.rpgym.data.PlayerData
 
 object QuestManager {
@@ -28,12 +29,12 @@ object QuestManager {
     private fun generateQuests() {
 
         // MAIN QUESTS (bossy)
-        for (i in 0..9) {
+        DungeonRepository.zones.forEachIndexed { i, zone ->
             quests.add(
                 Quest(
                     id = "boss_$i",
-                    title = "Pokonaj bossa ${i + 1}",
-                    description = "Zabij bossa w lochu ${i + 1}",
+                    title = "Pokonaj bossa ${zone.bossName}",
+                    description = "Zabij bossa w lochu ${zone.name}",
                     type = QuestType.MAIN,
                     target = 1
                 )
