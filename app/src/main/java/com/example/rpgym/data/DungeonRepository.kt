@@ -10,7 +10,7 @@ object DungeonRepository {
             "Las Goblinów",
             "Początek przygody",
             "Goblin",
-            "Król Goblinów",
+            "Król Goblinów :)",
             10, 5,
             100, 10,
             0
