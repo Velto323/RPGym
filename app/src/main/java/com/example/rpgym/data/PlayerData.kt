@@ -1,22 +1,27 @@
 package com.example.rpgym.data
 
 import android.content.Context
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 
 object PlayerData {
 
     // ================= PLAYER =================
-    var level = 1
-    var xp = 0
+    // Fields are Compose-observable: reading them inside a @Composable subscribes
+    // that composable to recomposition whenever the value changes.
+    var level by mutableStateOf(1)
+    var xp by mutableStateOf(0)
 
-    var strengthLevel = 1
-    var strengthXp = 0
+    var strengthLevel by mutableStateOf(1)
+    var strengthXp by mutableStateOf(0)
 
-    var hp = 100
-    var maxHp = 100
+    var hp by mutableStateOf(100)
+    var maxHp by mutableStateOf(100)
 
-    var gold = 0
-    var completedTasks = 0
-    var defeatedMonsters = 0
+    var gold by mutableStateOf(0)
+    var completedTasks by mutableStateOf(0)
+    var defeatedMonsters by mutableStateOf(0)
 
     // FINAL DAMAGE (ZAMIAST getStrength())
     val strength: Int
@@ -24,9 +29,9 @@ object PlayerData {
 
 
     // ================= DUNGEON =================
-    var currentZone = 0
-    var unlockedZone = 0
-    var dungeonWave = 1
+    var currentZone by mutableStateOf(0)
+    var unlockedZone by mutableStateOf(0)
+    var dungeonWave by mutableStateOf(1)
 
     val defeatedBosses = mutableSetOf<Int>()
 
@@ -162,11 +167,11 @@ object PlayerData {
 
 
     // ================= POTIONS =================
-    var healthPotions = 0
-    var strengthPotions = 0
+    var healthPotions by mutableStateOf(0)
+    var strengthPotions by mutableStateOf(0)
 
-    var powerPotionEndTime = 0L
-    var lifePotionEndTime = 0L
+    var powerPotionEndTime by mutableStateOf(0L)
+    var lifePotionEndTime by mutableStateOf(0L)
 
     private const val POTION_DURATION = 60 * 60 * 1000L
 
