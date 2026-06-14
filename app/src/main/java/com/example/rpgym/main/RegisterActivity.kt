@@ -2,40 +2,37 @@ package com.example.rpgym.main
 
 import android.os.Bundle
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.lifecycle.lifecycleScope
-import com.example.rpgym.databinding.ActivityRegisterBinding
+import com.example.rpgym.ui.theme.RPGymTheme
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.builtin.Email
 import kotlinx.coroutines.launch
 
-class RegisterActivity : AppCompatActivity() {
-
-    private lateinit var binding: ActivityRegisterBinding
+class RegisterActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityRegisterBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        binding.registerButton.setOnClickListener {
-            val email = binding.emailEditText.text.toString()
-            val password = binding.passwordEditText.text.toString()
-            val confirmPassword = binding.confirmPasswordEditText.text.toString()
-
-            if (email.isNotEmpty() && password.isNotEmpty() && confirmPassword.isNotEmpty()) {
-                if (password == confirmPassword) {
-                    register(email, password)
-                } else {
-                    Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show()
-                }
-            } else {
-                Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
+        setContent {
+            RPGymTheme {
+                RegisterScreen(
+                    onRegisterClick = { email, password, confirmPassword ->
+                        if (email.isNotEmpty() && password.isNotEmpty() && confirmPassword.isNotEmpty()) {
+                            if (password == confirmPassword) {
+                                register(email, password)
+                            } else {
+                                Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show()
+                            }
+                        } else {
+                            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
+                        }
+                    },
+                    onLoginClick = {
+                        finish()
+                    }
+                )
             }
-        }
-
-        binding.loginTextView.setOnClickListener {
-            finish()
         }
     }
 
@@ -46,7 +43,7 @@ class RegisterActivity : AppCompatActivity() {
                     this.email = email
                     this.password = password
                 }
-                Toast.makeText(this@RegisterActivity, "Registration successful! Please check your email for verification.", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@RegisterActivity, "Registration successful! Please login.", Toast.LENGTH_LONG).show()
                 finish()
             } catch (e: Exception) {
                 Toast.makeText(this@RegisterActivity, "Registration failed: ${e.message}", Toast.LENGTH_LONG).show()

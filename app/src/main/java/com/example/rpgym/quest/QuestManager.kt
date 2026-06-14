@@ -1,26 +1,30 @@
 package com.example.rpgym.quest
 
+import androidx.compose.runtime.mutableStateListOf
 import com.example.rpgym.data.PlayerData
 
 object QuestManager {
 
-    val quests = mutableListOf<Quest>()
+    val quests = mutableStateListOf<Quest>()
 
     init {
         generateQuests()
     }
 
     private fun generateQuests() {
-
+        quests.clear()
         // MAIN QUESTS (bossy)
         for (i in 0..9) {
+            val isDefeated = PlayerData.defeatedBosses.value.contains(i)
             quests.add(
                 Quest(
                     id = "boss_$i",
                     title = "Pokonaj bossa ${i + 1}",
                     description = "Zabij bossa w lochu ${i + 1}",
                     type = QuestType.MAIN,
-                    target = 1
+                    target = 1,
+                    initialProgress = if (isDefeated) 1 else 0,
+                    initialCompleted = isDefeated
                 )
             )
         }
@@ -35,6 +39,10 @@ object QuestManager {
                 target = 10
             )
         )
+    }
+
+    fun refreshQuests() {
+        generateQuests()
     }
 
     fun onBossKilled(zone: Int) {

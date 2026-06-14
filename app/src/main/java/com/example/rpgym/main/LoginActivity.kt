@@ -3,35 +3,33 @@ package com.example.rpgym.main
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.lifecycle.lifecycleScope
-import com.example.rpgym.databinding.ActivityLoginBinding
+import com.example.rpgym.ui.theme.RPGymTheme
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.auth.providers.builtin.Email
 import kotlinx.coroutines.launch
 
-class LoginActivity : AppCompatActivity() {
-
-    private lateinit var binding: ActivityLoginBinding
+class LoginActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityLoginBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        binding.loginButton.setOnClickListener {
-            val email = binding.emailEditText.text.toString()
-            val password = binding.passwordEditText.text.toString()
-
-            if (email.isNotEmpty() && password.isNotEmpty()) {
-                login(email, password)
-            } else {
-                Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
+        setContent {
+            RPGymTheme {
+                LoginScreen(
+                    onLoginClick = { email, password ->
+                        if (email.isNotEmpty() && password.isNotEmpty()) {
+                            login(email, password)
+                        } else {
+                            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
+                        }
+                    },
+                    onRegisterClick = {
+                        startActivity(Intent(this, RegisterActivity::class.java))
+                    }
+                )
             }
-        }
-
-        binding.registerTextView.setOnClickListener {
-            startActivity(Intent(this, RegisterActivity::class.java))
         }
     }
 

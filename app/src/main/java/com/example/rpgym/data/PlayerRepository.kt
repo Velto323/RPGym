@@ -29,7 +29,7 @@ class PlayerRepository(
         unlockedZone = PlayerData.unlockedZone,
         dungeonWave = PlayerData.dungeonWave,
         defeatedMonsters = PlayerData.defeatedMonsters,
-        defeatedBosses = PlayerData.defeatedBosses.toSet(),
+        defeatedBosses = PlayerData.defeatedBosses.value,
         powerPotionEndTime = PlayerData.powerPotionEndTime,
         lifePotionEndTime = PlayerData.lifePotionEndTime,
         meditationStartTime = PlayerData.meditationStartTime,
@@ -52,8 +52,7 @@ class PlayerRepository(
         PlayerData.unlockedZone = entity.unlockedZone
         PlayerData.dungeonWave = entity.dungeonWave
         PlayerData.defeatedMonsters = entity.defeatedMonsters
-        PlayerData.defeatedBosses.clear()
-        PlayerData.defeatedBosses.addAll(entity.defeatedBosses)
+        PlayerData.defeatedBosses.value = entity.defeatedBosses
         PlayerData.powerPotionEndTime = entity.powerPotionEndTime
         PlayerData.lifePotionEndTime = entity.lifePotionEndTime
         PlayerData.meditationStartTime = entity.meditationStartTime

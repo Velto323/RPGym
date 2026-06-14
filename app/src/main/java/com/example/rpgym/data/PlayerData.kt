@@ -1,67 +1,53 @@
 package com.example.rpgym.data
 
 import android.content.Context
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 
 object PlayerData {
 
     // ================= PLAYER =================
-    var level = 1
-    var xp = 0
+    var level by mutableIntStateOf(1)
+    var xp by mutableIntStateOf(0)
 
-    var strengthLevel = 1
-    var strengthXp = 0
+    var strengthLevel by mutableIntStateOf(1)
+    var strengthXp by mutableIntStateOf(0)
 
-    var hp = 100
-    var maxHp = 100
+    var hp by mutableIntStateOf(100)
+    var maxHp by mutableIntStateOf(100)
 
-    var gold = 0
-    var completedTasks = 0
-    var defeatedMonsters = 0
+    var gold by mutableIntStateOf(0)
+    var completedTasks by mutableIntStateOf(0)
+    var defeatedMonsters by mutableIntStateOf(0)
 
-    // FINAL DAMAGE (ZAMIAST getStrength())
     val strength: Int
         get() = strengthLevel * 5 + if (hasPowerPotion()) 5 else 0
 
 
     // ================= DUNGEON =================
-    var currentZone = 0
-    var unlockedZone = 0
-    var dungeonWave = 1
+    var currentZone by mutableIntStateOf(0)
+    var unlockedZone by mutableIntStateOf(0)
+    var dungeonWave by mutableIntStateOf(1)
 
-    val defeatedBosses = mutableSetOf<Int>()
+    val defeatedBosses = mutableStateOf(setOf<Int>())
 
 
     // ================= MEDITATION =================
-    var meditationStartTime: Long? = null
-    var lastMeditationTick: Long = System.currentTimeMillis()
-
-
-    // ================= LISTENERS =================
-    private val listeners = mutableSetOf<() -> Unit>()
-
-    fun addListener(l: () -> Unit) {
-        listeners.add(l)
-    }
-
-    fun removeListener(l: () -> Unit) {
-        listeners.remove(l)
-    }
-
-    fun notifyChange() {
-        listeners.forEach { it.invoke() }
-    }
+    var meditationStartTime by mutableStateOf<Long?>(null)
+    var lastMeditationTick by mutableLongStateOf(System.currentTimeMillis())
 
 
     // ================= HP =================
 
     fun damage(amount: Int) {
         hp = (hp - amount).coerceAtLeast(0)
-        notifyChange()
     }
 
     fun heal(amount: Int) {
         hp = (hp + amount).coerceAtMost(getCurrentMaxHp())
-        notifyChange()
     }
 
     fun getCurrentMaxHp(): Int {
@@ -81,8 +67,6 @@ object PlayerData {
             maxHp += 10
             hp = getCurrentMaxHp()
         }
-
-        notifyChange()
     }
 
     fun addStrengthXp(amount: Int) {
@@ -92,8 +76,6 @@ object PlayerData {
             strengthXp -= 100
             strengthLevel++
         }
-
-        notifyChange()
     }
 
 
@@ -101,13 +83,11 @@ object PlayerData {
 
     fun addGold(amount: Int) {
         gold += amount
-        notifyChange()
     }
 
     fun spendGold(amount: Int): Boolean {
         if (gold < amount) return false
         gold -= amount
-        notifyChange()
         return true
     }
 
@@ -115,14 +95,16 @@ object PlayerData {
     // ================= DUNGEON =================
 
     fun addBossKill(zone: Int): Boolean {
-        val first = defeatedBosses.add(zone)
+        val current = defeatedBosses.value
+        if (zone in current) return false
+        
+        defeatedBosses.value = current + zone
 
-        if (first && unlockedZone < 9) {
+        if (unlockedZone < 9) {
             unlockedZone++
         }
 
-        notifyChange()
-        return first
+        return true
     }
 
 
@@ -150,8 +132,6 @@ object PlayerData {
         hp = (hp + healed).coerceAtMost(getCurrentMaxHp())
 
         lastMeditationTick = now
-
-        notifyChange()
     }
 
     fun getTimeToFullHp(): Long {
@@ -162,11 +142,11 @@ object PlayerData {
 
 
     // ================= POTIONS =================
-    var healthPotions = 0
-    var strengthPotions = 0
+    var healthPotions by mutableIntStateOf(0)
+    var strengthPotions by mutableIntStateOf(0)
 
-    var powerPotionEndTime = 0L
-    var lifePotionEndTime = 0L
+    var powerPotionEndTime by mutableLongStateOf(0L)
+    var lifePotionEndTime by mutableLongStateOf(0L)
 
     private const val POTION_DURATION = 60 * 60 * 1000L
 
@@ -174,7 +154,6 @@ object PlayerData {
         if (gold < 20) return false
         gold -= 20
         healthPotions++
-        notifyChange()
         return true
     }
 
@@ -182,7 +161,6 @@ object PlayerData {
         if (gold < 20) return false
         gold -= 20
         strengthPotions++
-        notifyChange()
         return true
     }
 
@@ -193,7 +171,6 @@ object PlayerData {
         healthPotions--
         lifePotionEndTime = System.currentTimeMillis() + POTION_DURATION
 
-        notifyChange()
         return true
     }
 
@@ -203,7 +180,6 @@ object PlayerData {
         strengthPotions--
         powerPotionEndTime = System.currentTimeMillis() + POTION_DURATION
 
-        notifyChange()
         return true
     }
 
@@ -266,4 +242,31 @@ object PlayerData {
         powerPotionEndTime = p.getLong("powerPotionEndTime", 0L)
         lifePotionEndTime = p.getLong("lifePotionEndTime", 0L)
     }
+
+    fun reset() {
+        level = 1
+        xp = 0
+        strengthLevel = 1
+        strengthXp = 0
+        hp = 100
+        maxHp = 100
+        gold = 0
+        completedTasks = 0
+        defeatedMonsters = 0
+        currentZone = 0
+        unlockedZone = 0
+        dungeonWave = 1
+        defeatedBosses.value = emptySet()
+        meditationStartTime = null
+        lastMeditationTick = System.currentTimeMillis()
+        healthPotions = 0
+        strengthPotions = 0
+        powerPotionEndTime = 0L
+        lifePotionEndTime = 0L
+    }
+
+    // Compat for old listener system if needed, but better to remove
+    fun notifyChange() {}
+    fun addListener(l: () -> Unit) {}
+    fun removeListener(l: () -> Unit) {}
 }
