@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="16dp">
+
+    <!-- ROUND -->
+    <TextView
+        android:id="@+id/tvRound"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Runda: 1"
+        android:textSize="20sp"
+        android:layout_marginBottom="8dp"/>
+
+    <!-- MONSTER -->
+    <TextView
+        android:id="@+id/tvMonster"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Goblin"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="12dp"/>
+
+    <!-- HP -->
+    <TextView
+        android:id="@+id/tvHp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="HP: 100"
+        android:textSize="22sp"
+        android:layout_marginBottom="24dp"/>
+
+    <!-- ATTACK -->
+    <Button
+        android:id="@+id/btnAttack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="⚔ Atakuj"
+        android:textSize="18sp"/>
+
+</LinearLayout>
